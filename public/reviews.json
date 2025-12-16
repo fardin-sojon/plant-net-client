@@ -1,0 +1,74 @@
+[
+  {
+    "id": "5f47ac10b4f1c03e8c123456",
+    "user_email": "rubel.ahmed@example.com",
+    "userName": "Rubel Ahmed",
+    "delivery_email": "delivery1@example.com",
+    "ratings": 5,
+    "review": "The Money Plant I received is so healthy and fresh! Packaging was excellent.",
+    "parcel_id": "5f47ac10b4f1c03e8c654321",
+    "pick_up_email": "pickup1@example.com",
+    "user_photoURL": "https://randomuser.me/api/portraits/men/32.jpg",
+    "date": "2024-11-08T14:30:00.000Z"
+  },
+  {
+    "id": "5f47ac10b4f1c03e8c234567",
+    "user_email": "ayesha.khan@example.com",
+    "userName": "Ayesha Khan",
+    "delivery_email": "delivery2@example.com",
+    "ratings": 4.5,
+    "review": "Loved the Aloe Vera. It adds such a nice vibe to my living room.",
+    "parcel_id": "5f47ac10b4f1c03e8c765432",
+    "pick_up_email": "pickup2@example.com",
+    "user_photoURL": "https://randomuser.me/api/portraits/women/44.jpg",
+    "date": "2024-11-10T10:15:00.000Z"
+  },
+  {
+    "id": "5f47ac10b4f1c03e8c345678",
+    "user_email": "rahim.uddin@example.com",
+    "userName": "Rahim Uddin",
+    "delivery_email": "delivery3@example.com",
+    "ratings": 5,
+    "review": "Best place to buy indoor plants in destination! Highly recommended.",
+    "parcel_id": "5f47ac10b4f1c03e8c876543",
+    "pick_up_email": "pickup3@example.com",
+    "user_photoURL": "https://randomuser.me/api/portraits/men/65.jpg",
+    "date": "2024-12-01T08:50:00.000Z"
+  },
+  {
+    "id": "5f47ac10b4f1c03e8c456789",
+    "user_email": "nusrat.jahan@example.com",
+    "userName": "Nusrat Jahan",
+    "delivery_email": "delivery4@example.com",
+    "ratings": 4.8,
+    "review": "The Snake Plant looks amazing. Very happy with the swift delivery.",
+    "parcel_id": "5f47ac10b4f1c03e8c987654",
+    "pick_up_email": "pickup4@example.com",
+    "user_photoURL": "https://randomuser.me/api/portraits/women/68.jpg",
+    "date": "2024-12-05T09:10:00.000Z"
+  },
+  {
+    "id": "5f47ac10b4f1c03e8c567890",
+    "user_email": "minhaj.hossain@example.com",
+    "userName": "Minhaj Hossain",
+    "delivery_email": "delivery5@example.com",
+    "ratings": 4,
+    "review": "Great quality soil and pot. Will definitely order again.",
+    "parcel_id": "5f47ac10b4f1c03e8c098765",
+    "pick_up_email": "pickup5@example.com",
+    "user_photoURL": "https://randomuser.me/api/portraits/men/86.jpg",
+    "date": "2024-12-10T16:45:00.000Z"
+  },
+  {
+    "id": "5f47ac10b4f1c03e8c678901",
+    "user_email": "fatima.begum@example.com",
+    "userName": "Fatima Begum",
+    "delivery_email": "delivery6@example.com",
+    "ratings": 5,
+    "review": "My balcony looks so green now thanks to your hanging plants!",
+    "parcel_id": "5f47ac10b4f1c03e8c109876",
+    "pick_up_email": "pickup6@example.com",
+    "user_photoURL": "https://randomuser.me/api/portraits/women/90.jpg",
+    "date": "2024-12-12T12:00:00.000Z"
+  }
+]

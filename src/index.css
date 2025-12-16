@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    --swiper-theme-color: #84cc16;
+    /* lime-500 */
+    --swiper-pagination-color: #84cc16;
+    --swiper-pagination-bullet-inactive-color: #9ca3af;
+    /* gray-400 */
+    --swiper-pagination-bullet-inactive-opacity: 0.5;
+}
