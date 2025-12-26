@@ -72,32 +72,32 @@ const ChangePasswordModal = ({ isOpen, setIsOpen }) => {
                             leaveFrom='opacity-100 scale-100'
                             leaveTo='opacity-0 scale-95'
                         >
-                            <DialogPanel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                            <DialogPanel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all'>
                                 <DialogTitle
                                     as='h3'
-                                    className='text-lg font-medium leading-6 text-gray-900 text-center mb-4'
+                                    className='text-lg font-medium leading-6 text-gray-900 dark:text-white text-center mb-4'
                                 >
                                     Change Password
                                 </DialogTitle>
 
                                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
                                     <div>
-                                        <label className='block text-sm font-medium text-gray-700'>Old Password</label>
+                                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Old Password</label>
                                         <input
                                             type='password'
                                             {...register('oldPassword', { required: true })}
-                                            className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2'
+                                            className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                         />
                                         {errors.oldPassword && (
                                             <p className='text-red-500 text-xs mt-1'>{errors.oldPassword.message}</p>
                                         )}
                                     </div>
                                     <div>
-                                        <label className='block text-sm font-medium text-gray-700'>New Password</label>
+                                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>New Password</label>
                                         <input
                                             type='text'
                                             {...register('newPassword', { required: true, minLength: 6 })}
-                                            className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2'
+                                            className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                         />
                                     </div>
 

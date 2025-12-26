@@ -30,7 +30,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Small Screen Navbar */}
-      <div className='bg-gray-100 text-gray-800 flex justify-between md:hidden'>
+      <div className='bg-gray-100 text-gray-800 flex justify-between md:hidden dark:bg-gray-800 dark:text-white'>
         <div>
           <div className='block cursor-pointer p-4 font-bold'>
             <Link to='/'>
@@ -56,7 +56,7 @@ const Sidebar = () => {
       <div
         className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
           isActive ? 'translate-x-0' : '-translate-x-full'
-        }  md:translate-x-0  transition duration-200 ease-in-out`}
+        }  md:translate-x-0  transition duration-200 ease-in-out dark:bg-gray-800 dark:text-white`}
       >
         <div className='flex flex-col h-full'>
           {/* Top Content */}
@@ -100,7 +100,7 @@ const Sidebar = () => {
             />
             <button
               onClick={logOut}
-              className='flex cursor-pointer w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'
+              className='flex cursor-pointer w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
             >
               <GrLogout className='w-5 h-5' />
 

@@ -80,10 +80,10 @@ const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
                             leaveFrom='opacity-100 scale-100'
                             leaveTo='opacity-0 scale-95'
                         >
-                            <DialogPanel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                            <DialogPanel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-800 dark:text-white'>
                                 <DialogTitle
                                     as='h3'
-                                    className='text-lg font-medium leading-6 text-gray-900 text-center mb-4'
+                                    className='text-lg font-medium leading-6 text-gray-900 text-center mb-4 dark:text-white'
                                 >
                                     Update Profile
                                 </DialogTitle>
@@ -91,36 +91,36 @@ const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
                                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
                                     <div className="flex flex-col gap-4">
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700'>Email</label>
+                                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Email</label>
                                             <input
                                                 type='email'
                                                 disabled
                                                 value={user?.email || user?.providerData[0]?.email || ''}
-                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 bg-gray-100 cursor-not-allowed'
+                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 cursor-not-allowed'
                                             />
                                         </div>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700'>Name</label>
+                                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Name</label>
                                             <input
                                                 type='text'
                                                 defaultValue={user?.displayName}
                                                 {...register('name', { required: true })}
-                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2'
+                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                             />
                                         </div>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700'>Address</label>
+                                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Address</label>
                                             <input
                                                 type='text'
                                                 defaultValue={user?.address} // Assuming user object will eventually have address, or we might need to fetch it separately if it's not in auth object. 
                                                 // Note: Firebase auth user object doesn't have address. We might need to fetch user from DB to get address pre-filled.
                                                 // For now, let's allow saving it.
                                                 {...register('address')}
-                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2'
+                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                             />
                                         </div>
                                         <div>
-                                            <label className='block text-sm font-medium text-gray-700'>Profile Image</label>
+                                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Profile Image</label>
                                             <input
                                                 type='file'
                                                 id='profile_image'

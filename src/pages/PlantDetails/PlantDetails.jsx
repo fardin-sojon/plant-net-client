@@ -62,7 +62,7 @@ const PlantDetails = () => {
           <hr className="my-6" />
           <div
             className="
-          text-lg font-light text-neutral-500"
+          text-lg font-light text-neutral-500 dark:text-neutral-300"
           >
             {description}
           </div>
@@ -76,6 +76,7 @@ const PlantDetails = () => {
                 flex-row 
                 items-center
                 gap-2
+                dark:text-white
               "
           >
             <div>Seller: {seller?.name}</div>
@@ -96,6 +97,7 @@ const PlantDetails = () => {
                 gap-4 
                 font-light
                 text-neutral-500
+                dark:text-neutral-300
               "
             >
               Quantity: {quantity} Units Left Only!
@@ -103,7 +105,7 @@ const PlantDetails = () => {
           </div>
           <hr className="my-6" />
           <div className="flex justify-between">
-            <p className="font-bold text-3xl text-gray-500">Price: {price}$</p>
+            <p className="font-bold text-3xl text-gray-500 dark:text-gray-200">Price: {price}$</p>
             <div>
               <Button onClick={() => setIsOpen(true)} label="Purchase" />
             </div>

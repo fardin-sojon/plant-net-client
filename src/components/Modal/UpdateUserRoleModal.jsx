@@ -16,11 +16,11 @@ const UpdateUserRoleModal = ({ isOpen, closeModal, role, updateRole }) => {
           <div className='flex min-h-full items-center justify-center p-4'>
             <DialogPanel
               transition
-              className='w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl'
+              className='w-full max-w-md rounded-xl bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl dark:bg-gray-800'
             >
               <DialogTitle
                 as='h3'
-                className='text-base/7 font-medium text-black'
+                className='text-base/7 font-medium text-black dark:text-white'
               >
                 Update User Role
               </DialogTitle>
@@ -29,7 +29,7 @@ const UpdateUserRoleModal = ({ isOpen, closeModal, role, updateRole }) => {
                   <select
                     value={updatedRole}
                     onChange={e => setUpdatedRole(e.target.value)}
-                    className='w-full my-3 border border-gray-200 rounded-xl px-2 py-3'
+                    className='w-full my-3 border border-gray-200 rounded-xl px-2 py-3 dark:bg-gray-700 dark:text-white dark:border-gray-600'
                     name='role'
                     id=''
                   >

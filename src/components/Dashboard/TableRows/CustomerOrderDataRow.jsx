@@ -8,7 +8,7 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
 
   return (
     <tr>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <div className='flex items-center'>
           <div className='shrink-0'>
             <div className='block relative'>
@@ -22,29 +22,29 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
         </div>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>{name}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white'>{name}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>{category}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white'>{category}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>${price}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white'>${price}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>{quantity}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white'>{quantity}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900'>{status}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white'>{status}</p>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <button
           onClick={() => setIsOpen(true)}
           disabled={status === 'Delivered' || status === 'In Progress'}
-          className='relative disabled:cursor-not-allowed cursor-pointer inline-block px-3 py-1 font-semibold text-lime-900 leading-tight'
+          className='relative disabled:cursor-not-allowed cursor-pointer inline-block px-3 py-1 font-semibold text-lime-900 dark:text-white leading-tight'
         >
-          <span className='absolute cursor-pointer inset-0 bg-red-200 opacity-50 rounded-full'></span>
+          <span className='absolute cursor-pointer inset-0 bg-red-200 opacity-50 dark:bg-red-600 dark:opacity-100 rounded-full'></span>
           <span className='relative cursor-pointer'>Cancel</span>
         </button>
 

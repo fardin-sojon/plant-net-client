@@ -96,17 +96,17 @@ const AddPlantForm = () => {
   if (isError) return <ErrorPage />;
 
   return (
-    <div className="w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50">
+    <div className="w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 dark:text-gray-200 rounded-xl bg-gray-50 dark:bg-gray-900">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="space-y-6">
             {/* Name */}
             <div className="space-y-1 text-sm">
-              <label htmlFor="name" className="block text-gray-600">
+              <label htmlFor="name" className="block text-gray-600 dark:text-gray-300">
                 Name
               </label>
               <input
-                className="w-full px-4 py-3 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white"
+                className="w-full px-4 py-3 text-gray-800 dark:text-white border border-lime-300 focus:outline-lime-500 rounded-md bg-white dark:bg-gray-800"
                 name="name"
                 id="name"
                 type="text"
@@ -119,12 +119,12 @@ const AddPlantForm = () => {
             </div>
             {/* Category */}
             <div className="space-y-1 text-sm">
-              <label htmlFor="category" className="block text-gray-600 ">
+              <label htmlFor="category" className="block text-gray-600 dark:text-gray-300">
                 Category
               </label>
               <select
                 {...register("category", { required: true })}
-                className="w-full px-4 py-3 border-lime-300 focus:outline-lime-500 rounded-md bg-white"
+                className="w-full px-4 py-3 border-lime-300 focus:outline-lime-500 rounded-md bg-white dark:bg-gray-800 dark:text-white"
                 name="category"
               >
                 <option value="Indoor">Indoor</option>
@@ -138,7 +138,7 @@ const AddPlantForm = () => {
             </div>
             {/* Description */}
             <div className="space-y-1 text-sm">
-              <label htmlFor="description" className="block text-gray-600">
+              <label htmlFor="description" className="block text-gray-600 dark:text-gray-300">
                 Description
               </label>
 
@@ -146,7 +146,7 @@ const AddPlantForm = () => {
                 {...register("description", { required: true })}
                 id="description"
                 placeholder="Write plant description here..."
-                className="block rounded-md focus:lime-300 w-full h-32 px-4 py-3 text-gray-800  border border-lime-300 bg-white focus:outline-lime-500 "
+                className="block rounded-md focus:lime-300 w-full h-32 px-4 py-3 text-gray-800 dark:text-white border border-lime-300 bg-white dark:bg-gray-800 focus:outline-lime-500 "
                 name="description"
               ></textarea>
               {errors.description?.type === "required" && (
@@ -159,11 +159,11 @@ const AddPlantForm = () => {
             <div className="flex justify-between gap-2">
               {/* Price */}
               <div className="space-y-1 text-sm">
-                <label htmlFor="price" className="block text-gray-600 ">
+                <label htmlFor="price" className="block text-gray-600 dark:text-gray-300">
                   Price
                 </label>
                 <input
-                  className="w-full px-4 py-3 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white"
+                  className="w-full px-4 py-3 text-gray-800 dark:text-white border border-lime-300 focus:outline-lime-500 rounded-md bg-white dark:bg-gray-800"
                   name="price"
                   id="price"
                   type="number"
@@ -177,11 +177,11 @@ const AddPlantForm = () => {
 
               {/* Quantity */}
               <div className="space-y-1 text-sm">
-                <label htmlFor="quantity" className="block text-gray-600">
+                <label htmlFor="quantity" className="block text-gray-600 dark:text-gray-300">
                   Quantity
                 </label>
                 <input
-                  className="w-full px-4 py-3 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white"
+                  className="w-full px-4 py-3 text-gray-800 dark:text-white border border-lime-300 focus:outline-lime-500 rounded-md bg-white dark:bg-gray-800"
                   name="quantity"
                   id="quantity"
                   type="number"
@@ -196,7 +196,7 @@ const AddPlantForm = () => {
             </div>
             {/* Image */}
             <div className=" p-4  w-full  m-auto rounded-lg grow">
-              <div className="file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg">
+              <div className="file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 dark:border-gray-600 rounded-lg">
                 <div className="flex flex-col w-max mx-auto text-center">
                   <label>
                     <input

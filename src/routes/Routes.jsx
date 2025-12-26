@@ -16,6 +16,7 @@ import MyOrders from '../pages/Dashboard/Customer/MyOrders'
 import { createBrowserRouter } from 'react-router'
 import PaymentSuccess from '../pages/PlantDetails/Payment/PaymentSuccess'
 import ResetPassword from '../pages/ResetPassword/ResetPassword'
+import Cart from '../pages/Cart/Cart'
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
       {
         path: '/payment-success',
         element: <PaymentSuccess/>,
+      },
+      {
+        path: '/cart',
+        element: <Cart />,
       },
     ],
   },

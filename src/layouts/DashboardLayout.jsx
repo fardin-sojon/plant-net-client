@@ -3,7 +3,7 @@ import Sidebar from '../components/Dashboard/Sidebar/Sidebar'
 
 const DashboardLayout = () => {
   return (
-    <div className='relative min-h-screen md:flex bg-white'>
+    <div className='relative min-h-screen md:flex bg-white dark:bg-gray-900 dark:text-white'>
       {/* Left Side: Sidebar Component */}
       <Sidebar />
       {/* Right Side: Dashboard Dynamic Content */}

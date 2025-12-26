@@ -3,8 +3,10 @@ import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import axios from "axios";
 import { IoBagCheckOutline } from "react-icons/io5";
+import useCart from "../../../hooks/useCart";
 
 const PaymentSuccess = () => {
+  const { clearCart } = useCart();
   const [searchParams, setSearchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   // console.log(sessionId);
@@ -13,9 +15,15 @@ const PaymentSuccess = () => {
       // fetch
       axios.post(`${import.meta.env.VITE_API_URL}/payment-success`, {
         sessionId,
-      });
+      })
+      .then(res => {
+         if(res.data.success) {
+            clearCart();
+         }
+      })
+      .catch(err => console.error(err))
     }
-  }, [sessionId]);
+  }, [sessionId, clearCart]);
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="bg-white p-10 rounded-lg shadow-lg text-center">

@@ -16,7 +16,7 @@ const Profile = () => {
 
   return (
     <div className='flex justify-center items-center h-screen'>
-      <div className='bg-white shadow-lg rounded-2xl md:w-4/5 lg:w-3/5'>
+      <div className='bg-white dark:bg-gray-800 shadow-lg rounded-2xl md:w-4/5 lg:w-3/5'>
         <img
           alt='cover photo'
           src={coverImg}
@@ -35,16 +35,16 @@ const Profile = () => {
             {role}
           </p>
           <div className='w-full p-2 mt-4 rounded-lg'>
-            <div className='flex flex-wrap items-center justify-between text-sm text-gray-600 '>
+            <div className='flex flex-wrap items-center justify-between text-sm text-gray-600 dark:text-gray-300'>
               <p className='flex flex-col'>
                 Name
-                <span className='font-bold text-gray-600 '>
+                <span className='font-bold text-gray-800 dark:text-white'>
                   {user?.displayName}
                 </span>
               </p>
               <p className='flex flex-col'>
                 Email
-                <span className='font-bold text-gray-600 '>{user?.email || user?.providerData[0]?.email}</span>
+                <span className='font-bold text-gray-800 dark:text-white'>{user?.email || user?.providerData[0]?.email}</span>
               </p>
 
               <div>

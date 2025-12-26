@@ -68,7 +68,7 @@ const UpdatePlantModal = ({ setIsEditModalOpen, isOpen, plant, refetch }) => {
         <div className='flex min-h-full items-center justify-center p-4'>
           <DialogPanel
             transition
-            className='w-full max-w-md bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl'
+            className='w-full max-w-md bg-white dark:bg-gray-800 p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl'
           >
             <div className='flex justify-end'>
               <button
@@ -80,7 +80,7 @@ const UpdatePlantModal = ({ setIsEditModalOpen, isOpen, plant, refetch }) => {
             </div>
             <DialogTitle
               as='h3'
-              className='text-lg font-medium text-center leading-6 text-gray-900'
+              className='text-lg font-medium text-center leading-6 text-gray-900 dark:text-white'
             >
               Update Plant Info
             </DialogTitle>

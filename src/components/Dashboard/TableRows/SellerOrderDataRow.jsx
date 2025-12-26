@@ -8,7 +8,7 @@ const SellerOrderDataRow = ({order, handleDelete, handleStatusChange}) => {
 
   return (
     <tr>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <div className='flex items-center'>
           <div className='shrink-0'>
             <div className='block relative'>
@@ -21,30 +21,30 @@ const SellerOrderDataRow = ({order, handleDelete, handleStatusChange}) => {
           </div>
         </div>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>{name}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{name}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>{customer?.email || customer?.name || customer}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{customer?.email || customer?.name || customer}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>${price}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>${price}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>{quantity}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{quantity}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>{address}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{address}</p>
       </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>{status}</p>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
+        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{status}</p>
       </td>
 
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <div className='flex items-center gap-2'>
           <select
             required
-            className='p-1 border-2 border-lime-300 focus:outline-lime-500 rounded-md text-gray-900  bg-white'
+            className='p-1 border-2 border-lime-300 focus:outline-lime-500 rounded-md text-gray-900 dark:text-white bg-white dark:bg-gray-800'
             name='category'
             value={status}
             onChange={(e)=> handleStatusChange(_id, e.target.value)}
@@ -57,11 +57,11 @@ const SellerOrderDataRow = ({order, handleDelete, handleStatusChange}) => {
           <button
             onClick={() => setIsOpen(true)}
             disabled={status === 'Delivered' || status === 'In Progress'}
-            className='relative disabled:cursor-not-allowed cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
+            className='relative disabled:cursor-not-allowed cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 dark:text-white leading-tight'
           >
             <span
               aria-hidden='true'
-              className='absolute inset-0 bg-red-200 opacity-50 rounded-full'
+              className='absolute inset-0 bg-red-200 opacity-50 dark:bg-red-600 dark:opacity-100 rounded-full'
             ></span>
             <span className='relative'>Cancel</span>
           </button>

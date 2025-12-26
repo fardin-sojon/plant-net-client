@@ -12,20 +12,20 @@ const DeleteModal = ({ closeModal, isOpen, handleDelete, id }) => {
         <div className='flex min-h-full items-center justify-center p-4'>
           <DialogPanel
             transition
-            className='w-full max-w-md bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl'
+            className='w-full max-w-md bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl dark:bg-gray-800'
           >
             <DialogTitle
               as='h3'
-              className='text-lg font-medium leading-6 text-gray-900'
+              className='text-lg font-medium leading-6 text-gray-900 dark:text-white'
             >
               Are you sure?
             </DialogTitle>
             <div className='mt-2'>
-              <p className='text-sm text-gray-500'>
+              <p className='text-sm text-gray-500 dark:text-gray-300'>
                 You cannot undo once it&apos;s done!
               </p>
             </div>
-            <hr className='mt-8 ' />
+            <hr className='mt-8 dark:border-gray-700' />
             <div className='flex mt-2 justify-around'>
               <button
                 onClick={() => {

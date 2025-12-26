@@ -40,26 +40,26 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
         <div className="flex min-h-full items-center justify-center p-4">
           <DialogPanel
             transition
-            className="w-full max-w-md bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl"
+            className="w-full max-w-md bg-white dark:bg-gray-800 p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl"
           >
             <DialogTitle
               as="h3"
-              className="text-lg font-medium text-center leading-6 text-gray-900"
+              className="text-lg font-medium text-center leading-6 text-gray-900 dark:text-white"
             >
               Review Info Before Purchase
             </DialogTitle>
             <div className="mt-2">
-              <p className="text-sm text-gray-500">Plant: {name}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">Plant: {name}</p>
             </div>
             <div className="mt-2">
-              <p className="text-sm text-gray-500">Category: {category}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">Category: {category}</p>
             </div>
             <div className="mt-2">
-              <p className="text-sm text-gray-500">Customer: {user?.displayName}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">Customer: {user?.displayName}</p>
             </div>
 
             <div className="mt-2">
-              <p className="text-sm text-gray-500">Price: ${price}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">Price: ${price}</p>
             </div>
             <div className="mt-2">
               {/* <p className="text-sm text-gray-500">
