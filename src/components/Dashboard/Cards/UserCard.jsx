@@ -8,21 +8,21 @@ const UserCard = ({ user, refetch }) => {
   const axiosSecure = useAxiosSecure()
 
   return (
-    <div className='bg-white p-4 rounded-lg shadow border border-gray-200 space-y-3'>
+    <div className='bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700 space-y-3'>
       <div className='flex justify-between items-start'>
         <div>
-          <p className='text-xs text-gray-500 uppercase font-semibold'>Email</p>
-          <p className='text-gray-900 font-medium break-all'>{user?.email}</p>
+          <p className='text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold'>Email</p>
+          <p className='text-gray-900 dark:text-white font-medium break-all'>{user?.email}</p>
         </div>
         <div className='text-right'>
-           <p className='text-xs text-gray-500 uppercase font-semibold'>Role</p>
-           <p className='text-gray-900 capitalize'>{user?.role}</p>
+           <p className='text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold'>Role</p>
+           <p className='text-gray-900 dark:text-white capitalize'>{user?.role}</p>
         </div>
       </div>
       
       <div className='flex justify-between items-center'>
          <div>
-            <p className='text-xs text-gray-500 uppercase font-semibold'>Status</p>
+             <p className='text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold'>Status</p>
              {user?.status ? (
               <p
                 className={`${
@@ -38,11 +38,11 @@ const UserCard = ({ user, refetch }) => {
          
          <button
             onClick={() => setIsOpen(true)}
-            className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
+            className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 dark:text-white leading-tight'
           >
             <span
               aria-hidden='true'
-              className='absolute inset-0 bg-green-200 opacity-50 rounded-full'
+              className='absolute inset-0 bg-green-200 opacity-50 dark:bg-green-600 dark:opacity-100 rounded-full'
             ></span>
             <span className='relative'>Update Role</span>
           </button>

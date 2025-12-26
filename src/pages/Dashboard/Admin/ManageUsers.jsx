@@ -68,7 +68,7 @@ const ManageUsers = () => {
               </table>
 
               {/* Mobile View: Cards */}
-              <div className='md:hidden flex flex-col gap-4 p-4 bg-gray-50 dark:bg-gray-900'>
+              <div className='md:hidden space-y-4 p-4'>
                 {users.map(user => (
                   <UserCard key={user?._id} user={user} refetch={refetch} />
                 ))}

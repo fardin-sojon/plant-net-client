@@ -9,24 +9,35 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   // Total Price Calculation
 
   const handlePayment = async()=>{
-    const paymentInfo = {
-      plantId:_id,
-      name, 
-      category, 
-      price, 
-      description,
-      quantity: 1,
-      image,
-      seller,
-      customer: {
-        name: user?.displayName,
-        email: user?.email || user?.providerData[0]?.email,
-        image: user?.photoURL,
+    try {
+      // Format data to match backend API structure
+      const paymentData = {
+        items: [{
+          _id: _id,
+          plantId: _id,
+          name, 
+          category, 
+          price, 
+          description,
+          quantity: 1,
+          image,
+          seller
+        }],
+        customer: {
+          name: user?.displayName,
+          email: user?.email || user?.providerData?.[0]?.email,
+          image: user?.photoURL,
+        }
       }
+      
+      const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/create-checkout-session`, paymentData)
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('Payment error:', error)
+      alert('Payment failed: ' + (error.response?.data?.message || error.message || 'Unknown error'))
     }
-    const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/create-checkout-session`, paymentInfo)
-    window.location.href= data.url
-    // console.log(data.url);
   }
 
   return (

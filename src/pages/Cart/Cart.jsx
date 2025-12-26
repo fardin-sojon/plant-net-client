@@ -32,7 +32,7 @@ const Cart = () => {
         items: cart,
         customer: {
             name: user?.displayName,
-            email: user?.email,
+            email: user?.email || user?.providerData?.[0]?.email,
             image: user?.photoURL
         },
       })

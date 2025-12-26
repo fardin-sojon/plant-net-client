@@ -6,11 +6,14 @@ const useRole = () => {
   const { user, loading } = useAuth()
   const axiosSecure = useAxiosSecure()
 
+  // Get email from user object or fallback to providerData for Google login
+  const userEmail = user?.email || user?.providerData?.[0]?.email
+
   const { data: role = '', isLoading } = useQuery({
-    queryKey: ['role', user?.email],
-    enabled: !loading && !!user?.email,
+    queryKey: ['role', userEmail],
+    enabled: !loading && !!userEmail,
     queryFn: async () => {
-      const { data } = await axiosSecure(`/users/${user?.email}`)
+      const { data } = await axiosSecure(`/users/${userEmail}`)
       return data.role
     },
   })

@@ -4,6 +4,7 @@ import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
 import PlantDetails from '../pages/PlantDetails/PlantDetails'
 import PrivateRoute from './PrivateRoute'
+import AdminRoute from './AdminRoute'
 import DashboardLayout from '../layouts/DashboardLayout'
 import AddPlant from '../pages/Dashboard/Seller/AddPlant'
 import ManageUsers from '../pages/Dashboard/Admin/ManageUsers'
@@ -80,9 +81,9 @@ export const router = createBrowserRouter([
       {
         path: 'manage-users',
         element: (
-          <PrivateRoute>
+          <AdminRoute>
             <ManageUsers />
-          </PrivateRoute>
+          </AdminRoute>
         ),
       },
       {

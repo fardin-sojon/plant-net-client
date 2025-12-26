@@ -16,6 +16,8 @@ const Navbar = () => {
   // console.log(user);
   const [isOpen, setIsOpen] = useState(false)
 
+  console.log(user);
+
   return (
     <div className='fixed w-full bg-base-100 z-10 shadow-sm transition-colors duration-300'>
       <div className='py-4 border-b-[1px] border-base-200'>
