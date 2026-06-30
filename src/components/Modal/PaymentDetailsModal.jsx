@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import PropTypes from 'prop-types'
+import toast from 'react-hot-toast'
 
 const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
   return (
@@ -16,7 +17,7 @@ const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black bg-opacity-25' />
+          <div className='fixed inset-0 bg-black/40 backdrop-blur-sm' />
         </Transition.Child>
 
         <div className='fixed inset-0 overflow-y-auto'>
@@ -52,22 +53,37 @@ const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
                   <div className='mt-4 space-y-3'>
                     <div className='border-b dark:border-gray-700 pb-2'>
                       <p className='text-sm text-gray-500 dark:text-gray-400'>Transaction ID</p>
-                      <p className='text-sm font-medium text-gray-900 dark:text-white break-all'>
-                        {payment.paymentIntentId || 'N/A'}
-                      </p>
+                      <div className='flex items-center justify-between gap-2 mt-1'>
+                        <p className='text-sm font-medium text-gray-900 dark:text-white break-all'>
+                          {payment.paymentIntentId 
+                            ? `${payment.paymentIntentId.slice(0, 10)}...${payment.paymentIntentId.slice(-6)}` 
+                            : 'N/A'}
+                        </p>
+                        {payment.paymentIntentId && (
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(payment.paymentIntentId)
+                              toast.success('Copied to clipboard!')
+                            }}
+                            className='cursor-pointer text-xs bg-lime-100 hover:bg-lime-200 dark:bg-lime-900 dark:hover:bg-lime-800 text-lime-800 dark:text-lime-200 px-2 py-1 rounded transition'
+                          >
+                            Copy
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     <div className='border-b dark:border-gray-700 pb-2'>
                       <p className='text-sm text-gray-500 dark:text-gray-400'>Customer</p>
                       <p className='text-sm font-medium text-gray-900 dark:text-white'>
-                        {payment.customer}
+                        {payment.customerName ? `${payment.customerName} (${payment.customer})` : payment.customer}
                       </p>
                     </div>
 
                     <div className='border-b dark:border-gray-700 pb-2'>
                       <p className='text-sm text-gray-500 dark:text-gray-400'>Amount</p>
                       <p className='text-sm font-medium text-gray-900 dark:text-white'>
-                        ${payment.amount} {payment.currency?.toUpperCase()}
+                        {payment.currency?.toLowerCase() === 'bdt' ? '৳' : '$'}{payment.amount} {payment.currency?.toUpperCase()}
                       </p>
                     </div>
 
@@ -78,6 +94,24 @@ const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
                       </p>
                     </div>
 
+                    {payment.address && (
+                      <div className='border-b dark:border-gray-700 pb-2'>
+                        <p className='text-sm text-gray-500 dark:text-gray-400'>Shipping Address</p>
+                        <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                          {payment.address}
+                        </p>
+                      </div>
+                    )}
+
+                    {payment.phone && (
+                      <div className='border-b dark:border-gray-700 pb-2'>
+                        <p className='text-sm text-gray-500 dark:text-gray-400'>Phone Number</p>
+                        <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                          {payment.phone}
+                        </p>
+                      </div>
+                    )}
+
                     <div className='border-b dark:border-gray-700 pb-2'>
                       <p className='text-sm text-gray-500 dark:text-gray-400'>Items</p>
                       <div className='mt-2 space-y-2'>
@@ -85,7 +119,7 @@ const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
                           <div key={index} className='text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 p-2 rounded'>
                             <p className='font-medium'>{item.name}</p>
                             <p className='text-xs text-gray-600 dark:text-gray-300'>
-                              Qty: {item.quantity} × ${item.price} = ${item.quantity * item.price}
+                              Qty: {item.quantity} × {payment.currency?.toLowerCase() === 'bdt' ? '৳' : '$'}{item.price} = {payment.currency?.toLowerCase() === 'bdt' ? '৳' : '$'}{item.quantity * item.price}
                             </p>
                           </div>
                         ))}

@@ -33,6 +33,12 @@ const ManageUsers = () => {
                       scope='col'
                       className='px-5 py-3 bg-white dark:bg-gray-800  border-b border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white  text-left text-sm uppercase font-normal'
                     >
+                      Name
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white dark:bg-gray-800  border-b border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white  text-left text-sm uppercase font-normal'
+                    >
                       Email
                     </th>
                     <th

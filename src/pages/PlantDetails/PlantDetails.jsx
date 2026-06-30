@@ -8,8 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 import { IoArrowBack } from "react-icons/io5";
+import useAuth from "../../hooks/useAuth";
 
 const PlantDetails = () => {
+  const { user } = useAuth();
   let [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -107,7 +109,23 @@ const PlantDetails = () => {
           <div className="flex justify-between">
             <p className="font-bold text-3xl text-gray-500 dark:text-gray-200">Price: {price}$</p>
             <div>
-              <Button onClick={() => setIsOpen(true)} label="Purchase" />
+              <Button
+                disabled={quantity <= 0 || user?.email === seller?.email}
+                onClick={() => {
+                  if (!user) {
+                    navigate('/login');
+                    return;
+                  }
+                  setIsOpen(true);
+                }}
+                label={
+                  quantity <= 0
+                    ? "Out of Stock"
+                    : user?.email === seller?.email
+                    ? "Your Plant"
+                    : "Purchase"
+                }
+              />
             </div>
           </div>
           <button onClick={haldleBack} className="btn bg-blue-500 hover:bg-red-500 text-white rounded-xl"><IoArrowBack /> Back</button>

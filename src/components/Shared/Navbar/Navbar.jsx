@@ -1,7 +1,7 @@
 import Container from '../Container'
 import { AiOutlineMenu, AiOutlineShoppingCart } from 'react-icons/ai'
-import { useState, useContext } from 'react'
-import { Link } from 'react-router'
+import { useState, useContext, useRef, useEffect } from 'react'
+import { Link, NavLink } from 'react-router'
 import useAuth from '../../../hooks/useAuth'
 import useCart from '../../../hooks/useCart'
 import avatarImg from '../../../assets/images/placeholder.jpg'
@@ -13,13 +13,23 @@ const Navbar = () => {
   const { user, logOut } = useAuth()
   const { cart } = useCart()
   const { theme, toggleTheme } = useContext(ThemeContext)
-  // console.log(user);
   const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef(null)
 
-  console.log(user);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
-    <div className='fixed w-full bg-base-100 z-10 shadow-sm transition-colors duration-300'>
+    <div className='fixed w-full bg-base-100 z-50 shadow-sm transition-colors duration-300'>
       <div className='py-4 border-b-[1px] border-base-200'>
         <Container>
           <div className='flex flex-row  items-center justify-between gap-3 md:gap-0'>
@@ -27,8 +37,25 @@ const Navbar = () => {
             <Link to='/'>
               <img src={logo} alt='logo' width='100' height='100' />
             </Link>
+
+            {/* Center Menu Links (Desktop) */}
+            <div className='hidden md:flex flex-row items-center gap-6'>
+              <NavLink to='/' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                Home
+              </NavLink>
+              <NavLink to='/shop' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                Shop
+              </NavLink>
+              <NavLink to='/about' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                About Us
+              </NavLink>
+              <NavLink to='/contact' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                Contact Us
+              </NavLink>
+            </div>
+
             {/* Dropdown Menu */}
-            <div className='relative flex items-center gap-4'>
+            <div ref={dropdownRef} className='relative flex items-center gap-4'>
               {/* Theme Toggle */}
               <button onClick={toggleTheme} className='text-2xl hover:text-lime-500 transition'>
                 {theme === 'light' ? <FiMoon /> : <FiSun />}
@@ -66,21 +93,47 @@ const Navbar = () => {
                   <div className='flex flex-col cursor-pointer'>
                     <Link
                       to='/'
+                      onClick={() => setIsOpen(false)}
                       className='block md:hidden px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
                     >
                       Home
+                    </Link>
+                    <Link
+                      to='/shop'
+                      onClick={() => setIsOpen(false)}
+                      className='block md:hidden px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
+                    >
+                      Shop
+                    </Link>
+                    <Link
+                      to='/about'
+                      onClick={() => setIsOpen(false)}
+                      className='block md:hidden px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
+                    >
+                      About Us
+                    </Link>
+                    <Link
+                      to='/contact'
+                      onClick={() => setIsOpen(false)}
+                      className='block md:hidden px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
+                    >
+                      Contact Us
                     </Link>
 
                     {user ? (
                       <>
                         <Link
                           to='/dashboard'
+                          onClick={() => setIsOpen(false)}
                           className='px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
                         >
                           Dashboard
                         </Link>
                         <div
-                          onClick={logOut}
+                          onClick={() => {
+                            logOut()
+                            setIsOpen(false)
+                          }}
                           className='px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold cursor-pointer'
                         >
                           Logout
@@ -90,12 +143,14 @@ const Navbar = () => {
                       <>
                         <Link
                           to='/login'
+                          onClick={() => setIsOpen(false)}
                           className='px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
                         >
                           Login
                         </Link>
                         <Link
                           to='/signup'
+                          onClick={() => setIsOpen(false)}
                           className='px-4 py-3 hover:bg-neutral-100 dark:hover:bg-gray-800 transition font-semibold'
                         >
                           Sign Up

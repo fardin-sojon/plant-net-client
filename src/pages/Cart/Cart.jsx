@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router'
 import useAuth from '../../hooks/useAuth'
 import useAxiosSecure from '../../hooks/useAxiosSecure'
 import toast from 'react-hot-toast'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import LoadingSpinner from '../../components/Shared/LoadingSpinner'
 
 const Cart = () => {
@@ -13,6 +13,15 @@ const Cart = () => {
   const axiosSecure = useAxiosSecure()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [address, setAddress] = useState('')
+  const [phone, setPhone] = useState('')
+  const [recipientName, setRecipientName] = useState('')
+
+  useEffect(() => {
+    if (user?.displayName) {
+      setRecipientName(user.displayName)
+    }
+  }, [user])
 
   const handleCheckout = async () => {
     if (!user) {
@@ -25,6 +34,11 @@ const Cart = () => {
       return
     }
 
+    if (!recipientName.trim() || !address.trim() || !phone.trim()) {
+      toast.error('Please fill in name, address and phone number!')
+      return
+    }
+
     setLoading(true)
     try {
       // 1. Send cart items to backend to create order and get payment session
@@ -33,7 +47,10 @@ const Cart = () => {
         customer: {
             name: user?.displayName,
             email: user?.email || user?.providerData?.[0]?.email,
-            image: user?.photoURL
+            image: user?.photoURL,
+            recipientName: recipientName.trim(),
+            address: address.trim(),
+            phone: phone.trim()
         },
       })
       
@@ -127,9 +144,48 @@ const Cart = () => {
                  <span>${cartTotal.toFixed(2)}</span>
               </div>
 
+              {/* Shipping Info Inputs */}
+              <div className='mb-6 space-y-3 pt-4 border-t dark:border-gray-700'>
+                <h4 className='text-sm font-bold text-gray-700 dark:text-gray-200'>Shipping Details</h4>
+                <div>
+                  <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1'>Recipient Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter recipient's name"
+                    value={recipientName}
+                    onChange={(e) => setRecipientName(e.target.value)}
+                    className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1'>Shipping Address</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter shipping address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className='block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1'>Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="Enter phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
               <button
                 onClick={handleCheckout}
-                className='w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition duration-300'
+                disabled={!recipientName.trim() || !address.trim() || !phone.trim()}
+                className='w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-500 text-white font-bold py-3 rounded-xl transition duration-300 disabled:cursor-not-allowed'
               >
                 Proceed to Checkout
               </button>

@@ -33,44 +33,33 @@ const SignUp = () => {
   const from = location.state || "/";
 
   const onSubmit = async (data) => {
-    // console.log(data);
     const { name, image, email, password } = data;
     const imageFile = image[0];
-    // const formData = new FormData();
-    // formData.append("image", imageFile);
 
+    const loadingToast = toast.loading('Uploading profile image...')
     try {
       setLoading(true)
-      // IMageBB
-      // const {data} = await axios.post(
-      //   `https://api.imgbb.com/1/upload?key=${
-      //     import.meta.env.VITE_IMGBB_API_KEY
-      //   }`,
-      //   formData
-      // );
-      // console.log(data.data.display_url);
       const imageURL = await imageUpload(imageFile)
 
-      //2. User Registration
+      toast.loading('Creating account in Firebase...', { id: loadingToast })
       const result = await createUser(email, password);
 
-      //3. Save username & profile photo
-      await updateUserProfile(
-        name,
-        imageURL
-      );
+      toast.loading('Updating user profile...', { id: loadingToast })
+      await updateUserProfile(name, imageURL);
 
-      // save or update user in db
+      toast.loading('Saving user to database...', { id: loadingToast })
       await saveOrUpdateUser({
         name,
         image: imageURL,
         email,
       })
+
+      toast.dismiss(loadingToast)
       navigate(from, { replace: true });
       toast.success("Signup Successful");
     } catch (err) {
-      // console.log(err);
-      toast.error(err?.message);
+      toast.dismiss(loadingToast)
+      toast.error(err?.message || 'Registration failed');
       setLoading(false)
     }
   };

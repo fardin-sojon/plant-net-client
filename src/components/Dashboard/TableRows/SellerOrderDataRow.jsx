@@ -51,7 +51,12 @@ const SellerOrderDataRow = ({order, handleDelete, handleStatusChange}) => {
         <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{name}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
-        <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{customer?.email || customer?.name || customer}</p>
+        {order.customerName && (
+          <p className='text-gray-900 dark:text-white font-medium whitespace-no-wrap'>{order.customerName}</p>
+        )}
+        <p className='text-gray-500 dark:text-gray-400 text-xs mt-0.5 whitespace-no-wrap'>
+          {customer?.email || customer?.name || customer}
+        </p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <p className='text-gray-900 dark:text-white whitespace-no-wrap'>${price}</p>
@@ -61,6 +66,11 @@ const SellerOrderDataRow = ({order, handleDelete, handleStatusChange}) => {
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{address}</p>
+        {order?.phone && (
+          <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 whitespace-no-wrap'>
+            Phone: {order.phone}
+          </p>
+        )}
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{status}</p>

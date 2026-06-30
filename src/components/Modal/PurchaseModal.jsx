@@ -1,14 +1,52 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { useState, useEffect } from "react";
 import useAuth from '../../hooks/useAuth'
 import axios from "axios";
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   const {user} = useAuth()
   const {_id, name, category, quantity, price, description, image, seller } = plant
+  const [address, setAddress] = useState('')
+  const [phone, setPhone] = useState('')
+  const [recipientName, setRecipientName] = useState('')
 
-  // Total Price Calculation
+  useEffect(() => {
+    if (user?.displayName) {
+      setRecipientName(user.displayName)
+    }
+  }, [user])
 
+  const navigate = useNavigate()
   const handlePayment = async()=>{
+    if (!user) {
+      toast.error('Please log in first!')
+      navigate('/login')
+      return
+    }
+
+    if (quantity <= 0) {
+      toast.error('This plant is out of stock!')
+      return
+    }
+
+    if (user?.email === seller?.email) {
+      toast.error('You cannot buy your own plant!')
+      return
+    }
+
+    if (!address.trim() || !phone.trim()) {
+      toast.error('Please fill in both address and phone number!')
+      return
+    }
+
+    if (!recipientName.trim() || !address.trim() || !phone.trim()) {
+      toast.error('Please fill in name, address and phone number!')
+      return
+    }
+
+    const loadingToast = toast.loading('Initializing payment checkout...')
     try {
       // Format data to match backend API structure
       const paymentData = {
@@ -27,16 +65,21 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
           name: user?.displayName,
           email: user?.email || user?.providerData?.[0]?.email,
           image: user?.photoURL,
+          recipientName: recipientName.trim(),
+          address: address.trim(),
+          phone: phone.trim()
         }
       }
       
       const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/create-checkout-session`, paymentData)
+      toast.dismiss(loadingToast)
       if (data.url) {
         window.location.href = data.url
       }
     } catch (error) {
+      toast.dismiss(loadingToast)
       console.error('Payment error:', error)
-      alert('Payment failed: ' + (error.response?.data?.message || error.message || 'Unknown error'))
+      toast.error('Payment failed: ' + (error.response?.data?.message || error.message || 'Unknown error'))
     }
   }
 
@@ -72,16 +115,56 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
             <div className="mt-2">
               <p className="text-sm text-gray-500 dark:text-gray-300">Price: ${price}</p>
             </div>
-            <div className="mt-2">
-              {/* <p className="text-sm text-gray-500">
-                Available Quantity: {quantity}
-              </p> */}
+            
+            {/* Address & Phone Inputs */}
+            <div className="mt-4 space-y-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                  Recipient Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Enter recipient's name"
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value)}
+                  className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                  Shipping Address
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Enter shipping address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="Enter phone number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                />
+              </div>
             </div>
-            <div className="flex mt-2 justify-around">
+
+            <div className="flex mt-6 justify-around">
               <button
-              onClick={handlePayment}
+                onClick={handlePayment}
+                disabled={!recipientName.trim() || !address.trim() || !phone.trim()}
                 type="button"
-                className="cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 disabled:bg-gray-100 disabled:text-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-500 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
                 Pay
               </button>
