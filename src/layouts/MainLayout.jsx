@@ -20,7 +20,7 @@ const MainLayout = () => {
   return (
     <div>
       <Navbar />
-      <div className='pt-16 min-h-[calc(100vh-68px)]'>
+      <div className='pt-24 min-h-[calc(100vh-68px)]'>
         {loading ? (
           <div className='min-h-[60vh] flex items-center justify-center'>
             <LoadingSpinner />
