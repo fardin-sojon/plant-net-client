@@ -4,75 +4,273 @@ import useRole from '../../../hooks/useRole'
 import { useState } from 'react'
 import UpdateProfileModal from '../../../components/Modal/UpdateProfileModal'
 import ChangePasswordModal from '../../../components/Modal/ChangePasswordModal'
+import { useQuery } from '@tanstack/react-query'
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
+import { FaPhone, FaMapMarkerAlt, FaEnvelope, FaCalendarAlt, FaUserCircle, FaShoppingBag, FaHeart, FaWarehouse, FaTicketAlt, FaUsers } from 'react-icons/fa'
 
 const Profile = () => {
   const { user } = useAuth()
   const [role] = useRole()
-  // console.log(user)
+  const axiosSecure = useAxiosSecure()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(
-    false
-  )
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false)
+
+  const email = user?.email || user?.providerData?.[0]?.email
+
+  // Fetch full user details from DB
+  const { data: dbUser = {}, isLoading: isUserLoading, refetch } = useQuery({
+    queryKey: ['dbUser', email],
+    enabled: !!email,
+    queryFn: async () => {
+      const res = await axiosSecure(`/users/${email}`)
+      return res.data
+    }
+  })
+
+  // Fetch stats based on user role
+  const { data: customerWishlist = [] } = useQuery({
+    queryKey: ['customerWishlist', email],
+    enabled: role === 'customer' && !!email,
+    queryFn: async () => {
+      const res = await axiosSecure(`/wishlist/${email}`)
+      return res.data
+    }
+  })
+
+  const { data: customerOrders = [] } = useQuery({
+    queryKey: ['customerOrders', email],
+    enabled: role === 'customer' && !!email,
+    queryFn: async () => {
+      const res = await axiosSecure(`/my-orders/${email}`)
+      return res.data
+    }
+  })
+
+  const { data: sellerInventory = [] } = useQuery({
+    queryKey: ['sellerInventory', email],
+    enabled: role === 'seller' && !!email,
+    queryFn: async () => {
+      const res = await axiosSecure(`/my-inventory/${email}`)
+      return res.data
+    }
+  })
+
+  const { data: sellerOrders = [] } = useQuery({
+    queryKey: ['sellerOrders', email],
+    enabled: role === 'seller' && !!email,
+    queryFn: async () => {
+      const res = await axiosSecure(`/manage-orders/${email}`)
+      return res.data
+    }
+  })
+
+  const { data: adminUsers = [] } = useQuery({
+    queryKey: ['adminUsers'],
+    enabled: role === 'admin',
+    queryFn: async () => {
+      const res = await axiosSecure('/users')
+      return res.data
+    }
+  })
+
+  const { data: adminCoupons = [] } = useQuery({
+    queryKey: ['adminCoupons'],
+    enabled: role === 'admin',
+    queryFn: async () => {
+      const res = await axiosSecure('/coupons')
+      return res.data
+    }
+  })
+
+  if (isUserLoading) return <LoadingSpinner />
+
+  // Formatted date joined
+  const joinedDate = dbUser?.timestamp 
+    ? new Date(dbUser.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : 'Recently Joined'
 
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <div className='bg-white dark:bg-gray-800 shadow-lg rounded-2xl md:w-4/5 lg:w-3/5'>
-        <img
-          alt='cover photo'
-          src={coverImg}
-          className='w-full mb-4 rounded-t-lg h-56'
-        />
-        <div className='flex flex-col items-center justify-center p-4 -mt-16'>
-          <a href='#' className='relative block'>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* Cover and Profile Picture */}
+      <div className="bg-white dark:bg-gray-800 rounded-3xl border border-base-200 dark:border-gray-700 shadow-md overflow-hidden relative mb-8">
+        <div className="h-48 md:h-64 overflow-hidden relative">
+          <img
+            alt='cover photo'
+            src={coverImg}
+            className='w-full h-full object-cover brightness-90'
+          />
+        </div>
+        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 md:-mt-20 relative z-10">
+          <div className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
             <img
               alt='profile'
               src={user?.photoURL}
-              className='mx-auto object-cover rounded-full h-24 w-24  border-2 border-white '
+              className='w-full h-full object-cover'
             />
-          </a>
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex flex-col md:flex-row md:items-center gap-2.5">
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white">
+                {user?.displayName}
+              </h1>
+              <span className="inline-block px-3 py-1 bg-lime-500 text-white text-xs font-bold rounded-full uppercase tracking-wider self-center md:self-auto">
+                {role}
+              </span>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center justify-center md:justify-start gap-1">
+              <FaCalendarAlt className="text-xs" />
+              <span>Member Since: {joinedDate}</span>
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto self-center md:self-end">
+            <button
+              onClick={() => setIsEditModalOpen(true)}
+              className="px-5 py-2.5 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center"
+            >
+              Update Profile
+            </button>
+            {user?.providerData[0]?.providerId === 'password' && (
+              <button
+                onClick={() => setIsChangePasswordModalOpen(true)}
+                className="px-5 py-2.5 bg-base-100 hover:bg-base-200 border border-base-300 dark:border-gray-600 text-gray-800 dark:text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center"
+              >
+                Change Password
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
 
-          <p className='p-2 px-4 text-xs text-white bg-lime-500 rounded-full capitalize'>
-            {role}
-          </p>
-          <div className='w-full p-2 mt-4 rounded-lg'>
-            <div className='flex flex-wrap items-center justify-between text-sm text-gray-600 dark:text-gray-300'>
-              <p className='flex flex-col'>
-                Name
-                <span className='font-bold text-gray-800 dark:text-white'>
-                  {user?.displayName}
-                </span>
-              </p>
-              <p className='flex flex-col'>
-                Email
-                <span className='font-bold text-gray-800 dark:text-white'>{user?.email || user?.providerData[0]?.email}</span>
-              </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Profile Info Details card */}
+        <div className="md:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-3xl border border-base-200 dark:border-gray-700 shadow-sm flex flex-col gap-6">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white pb-3 border-b border-base-100 dark:border-gray-700">
+            Account Details
+          </h2>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex items-start gap-3">
+              <span className="p-3 bg-base-50 dark:bg-gray-900 border border-base-100 dark:border-gray-700 rounded-xl text-gray-500 dark:text-gray-400">
+                <FaUserCircle className="text-lg" />
+              </span>
               <div>
-                <button
-                  onClick={() => setIsEditModalOpen(true)}
-                  className='bg-lime-500  px-10 py-1 rounded-lg text-white cursor-pointer hover:bg-lime-800 block mb-1'
-                >
-                  Update Profile
-                </button>
-                {/* Only show if user is NOT logged in via social */}
-                {/* Simple check: providerId === 'password' implies email/password login */}
-                {/* Note: Google providerId is 'google.com' */}
-                {user?.providerData[0]?.providerId === 'password' && (
-                  <button
-                    onClick={() => setIsChangePasswordModalOpen(true)}
-                    className='bg-lime-500 px-7 py-1 rounded-lg text-white cursor-pointer hover:bg-lime-800'
-                  >
-                    Change Password
-                  </button>
-                )}
+                <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Full Name</p>
+                <p className="font-bold text-gray-800 dark:text-white mt-0.5">{dbUser?.name || user?.displayName}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="p-3 bg-base-50 dark:bg-gray-900 border border-base-100 dark:border-gray-700 rounded-xl text-gray-500 dark:text-gray-400">
+                <FaEnvelope className="text-lg" />
+              </span>
+              <div>
+                <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Email Address</p>
+                <p className="font-bold text-gray-800 dark:text-white mt-0.5 break-all">{email}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="p-3 bg-base-50 dark:bg-gray-900 border border-base-100 dark:border-gray-700 rounded-xl text-gray-500 dark:text-gray-400">
+                <FaPhone className="text-lg" />
+              </span>
+              <div>
+                <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Phone Number</p>
+                <p className="font-bold text-gray-800 dark:text-white mt-0.5">
+                  {dbUser?.phone || <span className="text-gray-400 font-normal italic">Not Set</span>}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="p-3 bg-base-50 dark:bg-gray-900 border border-base-100 dark:border-gray-700 rounded-xl text-gray-500 dark:text-gray-400">
+                <FaMapMarkerAlt className="text-lg" />
+              </span>
+              <div>
+                <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Address</p>
+                <p className="font-bold text-gray-800 dark:text-white mt-0.5">
+                  {dbUser?.address || <span className="text-gray-400 font-normal italic">Not Set</span>}
+                </p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Dashboard Statistics Widget */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-base-200 dark:border-gray-700 shadow-sm flex flex-col gap-6">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white pb-3 border-b border-base-100 dark:border-gray-700">
+            Activity Stats
+          </h2>
+
+          <div className="flex flex-col gap-4">
+            {role === 'customer' && (
+              <>
+                <div className="bg-lime-50/50 dark:bg-lime-950/20 border border-lime-100/50 dark:border-lime-900/50 p-4 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2.5 bg-lime-100 dark:bg-lime-900 rounded-xl text-lime-600 dark:text-lime-400"><FaShoppingBag /></span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">Orders Placed</span>
+                  </div>
+                  <span className="text-xl font-extrabold text-lime-600 dark:text-lime-400">{customerOrders.length}</span>
+                </div>
+
+                <div className="bg-rose-50/50 dark:bg-rose-950/20 border border-rose-100/50 dark:border-rose-900/50 p-4 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2.5 bg-rose-100 dark:bg-rose-900 rounded-xl text-rose-600 dark:text-rose-400"><FaHeart /></span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">Wishlisted Plants</span>
+                  </div>
+                  <span className="text-xl font-extrabold text-rose-600 dark:text-rose-400">{customerWishlist.length}</span>
+                </div>
+              </>
+            )}
+
+            {role === 'seller' && (
+              <>
+                <div className="bg-lime-50/50 dark:bg-lime-950/20 border border-lime-100/50 dark:border-lime-900/50 p-4 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2.5 bg-lime-100 dark:bg-lime-900 rounded-xl text-lime-600 dark:text-lime-400"><FaWarehouse /></span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">My Plants Inventory</span>
+                  </div>
+                  <span className="text-xl font-extrabold text-lime-600 dark:text-lime-400">{sellerInventory.length}</span>
+                </div>
+
+                <div className="bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/50 p-4 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2.5 bg-blue-100 dark:bg-blue-900 rounded-xl text-blue-600 dark:text-blue-400"><FaShoppingBag /></span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">Orders Received</span>
+                  </div>
+                  <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">{sellerOrders.length}</span>
+                </div>
+              </>
+            )}
+
+            {role === 'admin' && (
+              <>
+                <div className="bg-lime-50/50 dark:bg-lime-950/20 border border-lime-100/50 dark:border-lime-900/50 p-4 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2.5 bg-lime-100 dark:bg-lime-900 rounded-xl text-lime-600 dark:text-lime-400"><FaUsers /></span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">Total Platform Users</span>
+                  </div>
+                  <span className="text-xl font-extrabold text-lime-600 dark:text-lime-400">{adminUsers.length}</span>
+                </div>
+
+                <div className="bg-purple-50/50 dark:bg-purple-950/20 border border-purple-100/50 dark:border-purple-900/50 p-4 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="p-2.5 bg-purple-100 dark:bg-purple-900 rounded-xl text-purple-600 dark:text-purple-400"><FaTicketAlt /></span>
+                    <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">Active Coupons</span>
+                  </div>
+                  <span className="text-xl font-extrabold text-purple-600 dark:text-purple-400">{adminCoupons.length}</span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
+
       <UpdateProfileModal
         isOpen={isEditModalOpen}
         setIsOpen={setIsEditModalOpen}
+        dbUser={dbUser}
+        refetch={refetch}
       />
       <ChangePasswordModal
         isOpen={isChangePasswordModalOpen}

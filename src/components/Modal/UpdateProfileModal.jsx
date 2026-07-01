@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { imageUpload, saveOrUpdateUser } from '../../utils'
 import useAuth from '../../hooks/useAuth'
 
-const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
+const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
     const { user, updateUserProfile, setUser } = useAuth()
     const [loading, setLoading] = useState(false)
     const [imagePreview, setImagePreview] = useState(user?.photoURL)
@@ -23,7 +23,6 @@ const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
             }
 
             await updateUserProfile(name, imageUrl)
-            // Immediately update local state while preserving prototype
             // Immediately update local state
             setUser({
                 ...user,
@@ -38,12 +37,13 @@ const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
                 name,
                 image: imageUrl,
                 email: user?.email || user?.providerData[0]?.email,
-                address: data.address
+                address: data.address,
+                phone: data.phone
             })
             toast.success('Profile Updated Successfully')
+            refetch()
             setIsOpen(false)
         } catch (err) {
-            // console.log(err)
             toast.error(err.message)
         } finally {
             setLoading(false)
@@ -103,8 +103,17 @@ const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
                                             <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Name</label>
                                             <input
                                                 type='text'
-                                                defaultValue={user?.displayName}
+                                                defaultValue={dbUser?.name || user?.displayName}
                                                 {...register('name', { required: true })}
+                                                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Phone Number</label>
+                                            <input
+                                                type='tel'
+                                                defaultValue={dbUser?.phone || ''}
+                                                {...register('phone')}
                                                 className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                             />
                                         </div>
@@ -112,9 +121,7 @@ const UpdateProfileModal = ({ isOpen, setIsOpen }) => {
                                             <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Address</label>
                                             <input
                                                 type='text'
-                                                defaultValue={user?.address} // Assuming user object will eventually have address, or we might need to fetch it separately if it's not in auth object. 
-                                                // Note: Firebase auth user object doesn't have address. We might need to fetch user from DB to get address pre-filled.
-                                                // For now, let's allow saving it.
+                                                defaultValue={dbUser?.address || ''}
                                                 {...register('address')}
                                                 className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                             />
