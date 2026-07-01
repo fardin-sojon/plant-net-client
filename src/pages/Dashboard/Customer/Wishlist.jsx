@@ -13,10 +13,10 @@ const Wishlist = () => {
   const { addToCart } = useCart()
 
   const { data: wishlistItems = [], isLoading, refetch } = useQuery({
-    queryKey: ['wishlist', user?.email],
-    enabled: !!user?.email,
+    queryKey: ['wishlist', user?.email || user?.providerData?.[0]?.email],
+    enabled: !!(user?.email || user?.providerData?.[0]?.email),
     queryFn: async () => {
-      const res = await axiosSecure(`/wishlist/${user?.email}`)
+      const res = await axiosSecure(`/wishlist/${user?.email || user?.providerData?.[0]?.email}`)
       return res.data
     }
   })

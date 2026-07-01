@@ -53,10 +53,10 @@ const PlantDetails = () => {
 
   // Fetch wishlist to check if plant is wishlisted
   const { data: wishlist = [], refetch: refetchWishlist } = useQuery({
-    queryKey: ["wishlist", user?.email],
-    enabled: !!user?.email,
+    queryKey: ["wishlist", user?.email || user?.providerData?.[0]?.email],
+    enabled: !!(user?.email || user?.providerData?.[0]?.email),
     queryFn: async () => {
-      const res = await axiosSecure(`/wishlist/${user?.email}`);
+      const res = await axiosSecure(`/wishlist/${user?.email || user?.providerData?.[0]?.email}`);
       return res.data;
     }
   });
@@ -113,7 +113,7 @@ const PlantDetails = () => {
         toast.success("Removed from Wishlist");
       } else {
         await axiosSecure.post("/wishlist", {
-          email: user.email,
+          email: user?.email || user?.providerData?.[0]?.email,
           plantId: id,
           name,
           image,
@@ -144,7 +144,7 @@ const PlantDetails = () => {
         plantId: id,
         rating: ratingState,
         comment: reviewComment,
-        email: user.email,
+        email: user?.email || user?.providerData?.[0]?.email,
         name: user.displayName || "Anonymous User",
         avatar: user.photoURL || ""
       });
@@ -186,12 +186,16 @@ const PlantDetails = () => {
             {/* Wishlist Heart Icon overlay */}
             <button
               onClick={handleWishlistToggle}
-              className="absolute top-4 right-4 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 transition duration-300 border border-base-200 dark:border-gray-700 focus:outline-none"
+              className={`absolute top-4 right-4 p-3 rounded-full shadow-lg cursor-pointer hover:scale-115 active:scale-95 transition-all duration-300 border focus:outline-none ${
+                isWishlisted 
+                  ? 'bg-rose-50 border-rose-200 dark:bg-rose-950 dark:border-rose-900' 
+                  : 'bg-white border-base-200 dark:bg-gray-800 dark:border-gray-700'
+              }`}
             >
               {isWishlisted ? (
-                <FaHeart className="text-red-500 text-xl" />
+                <FaHeart className="text-rose-500 text-xl animate-pulse" />
               ) : (
-                <FaRegHeart className="text-gray-500 dark:text-gray-300 text-xl hover:text-red-500" />
+                <FaRegHeart className="text-gray-500 dark:text-gray-300 text-xl hover:text-rose-500" />
               )}
             </button>
           </div>
