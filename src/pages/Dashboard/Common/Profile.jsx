@@ -102,7 +102,7 @@ const Profile = () => {
             className='w-full h-full object-cover brightness-90'
           />
         </div>
-        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 -mt-16 md:-mt-20 relative z-10">
+        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 -mt-16 md:-mt-20 relative z-10 flex-wrap lg:flex-nowrap">
           <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
             <div className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg shrink-0">
               <img
@@ -113,7 +113,7 @@ const Profile = () => {
             </div>
             <div className="text-center md:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white leading-tight">
+                <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white leading-tight sm:whitespace-nowrap">
                   {user?.displayName}
                 </h1>
                 <span className="inline-block px-3 py-1 bg-lime-500 text-white text-xs font-bold rounded-full uppercase tracking-wider self-center sm:self-auto w-fit">
