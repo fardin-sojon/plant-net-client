@@ -1,33 +1,22 @@
 import { useState } from 'react'
 import UpdateUserRoleModal from '../../Modal/UpdateUserRoleModal'
+import DeleteModal from '../../Modal/DeleteModal'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import toast from 'react-hot-toast'
-import Swal from 'sweetalert2'
 
 const UserCard = ({ user, refetch }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const axiosSecure = useAxiosSecure()
 
-  const handleDelete = async () => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete user ${user?.email}. This action cannot be undone!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axiosSecure.delete(`/users/${user?._id}`)
-          refetch()
-          toast.success('User deleted successfully!')
-        } catch (err) {
-          toast.error(err.message || 'Failed to delete user')
-        }
-      }
-    })
+  const handleDelete = async (id) => {
+    try {
+      await axiosSecure.delete(`/users/${id}`)
+      refetch()
+      toast.success('User deleted successfully!')
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete user')
+    }
   }
 
   const handleApprove = async () => {
@@ -111,11 +100,11 @@ const UserCard = ({ user, refetch }) => {
            </button>
            
            <button
-             onClick={handleDelete}
-             className='px-2.5 py-1 text-xs font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg cursor-pointer transition'
-           >
-             Delete
-           </button>
+             onClick={() => setIsDeleteOpen(true)}
+            className='px-2.5 py-1 text-xs font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg cursor-pointer transition'
+          >
+            Delete
+          </button>
          </div>
       </div>
 
@@ -137,6 +126,12 @@ const UserCard = ({ user, refetch }) => {
         }}
         user={user}
         refetch={refetch}
+      />
+      <DeleteModal
+        isOpen={isDeleteOpen}
+        closeModal={() => setIsDeleteOpen(false)}
+        handleDelete={handleDelete}
+        id={user?._id}
       />
     </div>
   )
