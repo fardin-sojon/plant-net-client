@@ -31,12 +31,13 @@ const UserDataRow = ({ user, refetch }) => {
   }
   const handleApprove = async () => {
     try {
+      const targetRole = user?.role === 'customer' ? 'seller' : user?.role
       await axiosSecure.patch(`/users/update/${user?.email}`, {
-        role: 'seller',
+        role: targetRole,
         status: 'Verified'
       })
       refetch()
-      toast.success('Seller request approved successfully!')
+      toast.success('User verified successfully!')
     } catch (err) {
       toast.error(err.response?.data?.message || err.message)
     }
@@ -80,7 +81,7 @@ const UserDataRow = ({ user, refetch }) => {
             {user?.status || 'Unavailable'}
           </span>
           
-          {user?.status === 'Requested' && (
+          {(user?.status !== 'Verified' && (user?.status === 'Requested' || user?.role === 'admin' || user?.role === 'seller')) && (
             <button
               onClick={handleApprove}
               className='px-2.5 py-1 text-2xs font-extrabold text-white bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition shadow-xs whitespace-nowrap'

@@ -32,12 +32,13 @@ const UserCard = ({ user, refetch }) => {
 
   const handleApprove = async () => {
     try {
+      const targetRole = user?.role === 'customer' ? 'seller' : user?.role
       await axiosSecure.patch(`/users/update/${user?.email}`, {
-        role: 'seller',
+        role: targetRole,
         status: 'Verified'
       })
       refetch()
-      toast.success('Seller request approved successfully!')
+      toast.success('User verified successfully!')
     } catch (err) {
       toast.error(err.response?.data?.message || err.message)
     }
@@ -90,7 +91,7 @@ const UserCard = ({ user, refetch }) => {
                  {user?.status || 'Unavailable'}
                </span>
 
-               {user?.status === 'Requested' && (
+               {(user?.status !== 'Verified' && (user?.status === 'Requested' || user?.role === 'admin' || user?.role === 'seller')) && (
                  <button
                    onClick={handleApprove}
                    className='px-2 py-0.5 text-3xs font-extrabold text-white bg-lime-500 hover:bg-lime-600 rounded-md cursor-pointer transition text-[9px] whitespace-nowrap'
