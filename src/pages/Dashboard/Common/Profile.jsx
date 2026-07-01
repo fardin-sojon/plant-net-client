@@ -113,7 +113,7 @@ const Profile = () => {
             </div>
             <div className="text-center md:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white leading-tight sm:whitespace-nowrap">
+                <h1 className="text-xl md:text-2xl font-extrabold text-gray-800 dark:text-white leading-tight sm:whitespace-nowrap">
                   {user?.displayName}
                 </h1>
                 <span className="inline-block px-3 py-1 bg-lime-500 text-white text-xs font-bold rounded-full uppercase tracking-wider self-center sm:self-auto w-fit">
