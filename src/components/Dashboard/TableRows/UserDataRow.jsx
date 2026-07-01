@@ -124,6 +124,7 @@ const UserDataRow = ({ user, refetch }) => {
           closeModal={() => setIsDeleteOpen(false)}
           handleDelete={handleDelete}
           id={user?._id}
+          itemName={user?.email}
         />
       </td>
     </tr>

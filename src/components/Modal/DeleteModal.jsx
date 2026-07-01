@@ -1,6 +1,6 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 
-const DeleteModal = ({ closeModal, isOpen, handleDelete, id }) => {
+const DeleteModal = ({ closeModal, isOpen, handleDelete, id, itemName }) => {
   return (
     <Dialog
       open={isOpen}
@@ -20,10 +20,15 @@ const DeleteModal = ({ closeModal, isOpen, handleDelete, id }) => {
             >
               Are you sure?
             </DialogTitle>
-            <div className='mt-2'>
+            <div className='mt-2 space-y-2'>
               <p className='text-sm text-gray-500 dark:text-gray-300'>
                 You cannot undo once it&apos;s done!
               </p>
+              {itemName && (
+                <p className='text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 px-3 py-1.5 rounded-lg border border-rose-100 dark:border-rose-900/30 w-fit break-all'>
+                  Target: {itemName}
+                </p>
+              )}
             </div>
             <hr className='mt-8 dark:border-gray-700' />
             <div className='flex mt-2 justify-around'>

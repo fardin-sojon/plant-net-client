@@ -97,15 +97,15 @@ const UserCard = ({ user, refetch }) => {
               className='px-2.5 py-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 border border-emerald-200 dark:border-emerald-800 rounded-lg cursor-pointer transition'
             >
               Update Role
-           </button>
-           
-           <button
-             onClick={() => setIsDeleteOpen(true)}
-            className='px-2.5 py-1 text-xs font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg cursor-pointer transition'
-          >
-            Delete
-          </button>
-         </div>
+            </button>
+            
+            <button
+              onClick={() => setIsDeleteOpen(true)}
+              className='px-2.5 py-1 text-xs font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg cursor-pointer transition'
+            >
+              Delete
+            </button>
+          </div>
       </div>
 
       <UpdateUserRoleModal
@@ -132,6 +132,7 @@ const UserCard = ({ user, refetch }) => {
         closeModal={() => setIsDeleteOpen(false)}
         handleDelete={handleDelete}
         id={user?._id}
+        itemName={user?.email}
       />
     </div>
   )
