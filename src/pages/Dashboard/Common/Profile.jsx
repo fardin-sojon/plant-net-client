@@ -102,9 +102,9 @@ const Profile = () => {
             className='w-full h-full object-cover brightness-90'
           />
         </div>
-        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 -mt-16 md:-mt-20 relative z-10 flex-wrap lg:flex-nowrap">
+        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 relative z-10 flex-wrap lg:flex-nowrap">
           <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
-            <div className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg shrink-0">
+            <div className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg shrink-0 -mt-16 md:-mt-20 relative z-20">
               <img
                 alt='profile'
                 src={user?.photoURL}
