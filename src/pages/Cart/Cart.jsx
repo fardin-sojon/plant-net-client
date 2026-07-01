@@ -284,7 +284,7 @@ const Cart = () => {
                     required
                     placeholder="Enter phone number"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
                     className="w-full text-sm px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   />
                 </div>
