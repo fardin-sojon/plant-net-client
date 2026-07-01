@@ -75,7 +75,7 @@ const ManageCoupons = () => {
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Coupon Name</label>
               <input
                 type="text"
-                placeholder="SAVE20"
+                placeholder="COUPON NAME"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-base-300 dark:border-gray-700 bg-base-50 dark:bg-gray-900 text-gray-800 dark:text-white focus:ring-2 focus:ring-lime-500 focus:outline-none transition"
@@ -100,7 +100,7 @@ const ManageCoupons = () => {
               </label>
               <input
                 type="number"
-                placeholder={discountType === 'percent' ? '20' : '50'}
+                placeholder={discountType === 'percent' ? '15' : '100'}
                 value={discountAmount}
                 onChange={(e) => setDiscountAmount(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-base-300 dark:border-gray-700 bg-base-50 dark:bg-gray-900 text-gray-800 dark:text-white focus:ring-2 focus:ring-lime-500 focus:outline-none transition"
