@@ -8,10 +8,9 @@ The platform emphasizes a clean user experience, secure transactions, and effici
 
 ---
 
-## 🌐 Live Application
+###
 
-🔗 **Frontend (Vercel):** [https://plant-net-client-six.vercel.app](https://plant-net-client-six.vercel.app)  
-🔗 **Backend API (Vercel):** [https://plant-net-server-two.vercel.app](https://plant-net-server-two.vercel.app)
+🔗 [🌐 Live Link](https://fardins.shop)
 
 ---
 
