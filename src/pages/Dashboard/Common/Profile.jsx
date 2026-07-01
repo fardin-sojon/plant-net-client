@@ -102,39 +102,41 @@ const Profile = () => {
             className='w-full h-full object-cover brightness-90'
           />
         </div>
-        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 md:-mt-20 relative z-10">
-          <div className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
-            <img
-              alt='profile'
-              src={user?.photoURL}
-              className='w-full h-full object-cover'
-            />
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex flex-col md:flex-row md:items-center gap-2.5">
-              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white">
-                {user?.displayName}
-              </h1>
-              <span className="inline-block px-3 py-1 bg-lime-500 text-white text-xs font-bold rounded-full uppercase tracking-wider self-center md:self-auto">
-                {role}
-              </span>
+        <div className="px-6 pb-6 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 -mt-16 md:-mt-20 relative z-10">
+          <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
+            <div className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg shrink-0">
+              <img
+                alt='profile'
+                src={user?.photoURL}
+                className='w-full h-full object-cover'
+              />
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center justify-center md:justify-start gap-1">
-              <FaCalendarAlt className="text-xs" />
-              <span>Member Since: {joinedDate}</span>
-            </p>
+            <div className="text-center md:text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white leading-tight">
+                  {user?.displayName}
+                </h1>
+                <span className="inline-block px-3 py-1 bg-lime-500 text-white text-xs font-bold rounded-full uppercase tracking-wider self-center sm:self-auto w-fit">
+                  {role}
+                </span>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5 flex items-center justify-center md:justify-start gap-1">
+                <FaCalendarAlt className="text-xs" />
+                <span>Member Since: {joinedDate}</span>
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto self-center md:self-end">
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0 justify-center md:justify-end">
             <button
               onClick={() => setIsEditModalOpen(true)}
-              className="px-5 py-2.5 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center"
+              className="px-5 py-2.5 bg-lime-500 hover:bg-lime-600 text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center whitespace-nowrap"
             >
               Update Profile
             </button>
             {user?.providerData[0]?.providerId === 'password' && (
               <button
                 onClick={() => setIsChangePasswordModalOpen(true)}
-                className="px-5 py-2.5 bg-base-100 hover:bg-base-200 border border-base-300 dark:border-gray-600 text-gray-800 dark:text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center"
+                className="px-5 py-2.5 bg-base-100 hover:bg-base-200 border border-base-300 dark:border-gray-600 text-gray-800 dark:text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center whitespace-nowrap"
               >
                 Change Password
               </button>
