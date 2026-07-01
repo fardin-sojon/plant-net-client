@@ -9,17 +9,30 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
     const { user, updateUserProfile, setUser } = useAuth()
     const [loading, setLoading] = useState(false)
     const [imagePreview, setImagePreview] = useState(user?.photoURL)
+    const [coverPreview, setCoverPreview] = useState(dbUser?.cover)
     const { register, handleSubmit } = useForm()
+
+    useEffect(() => {
+        if (isOpen) {
+            setImagePreview(user?.photoURL)
+            setCoverPreview(dbUser?.cover)
+        }
+    }, [isOpen, user, dbUser])
 
     const onSubmit = async data => {
         setLoading(true)
         try {
             const name = data.name
             const image = data.image[0]
+            const coverImage = data.coverImage[0]
             let imageUrl = user?.photoURL
+            let coverUrl = dbUser?.cover || ''
 
             if (image) {
                 imageUrl = await imageUpload(image)
+            }
+            if (coverImage) {
+                coverUrl = await imageUpload(coverImage)
             }
 
             await updateUserProfile(name, imageUrl)
@@ -38,7 +51,8 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
                 image: imageUrl,
                 email: user?.email || user?.providerData[0]?.email,
                 address: data.address,
-                phone: data.phone
+                phone: data.phone,
+                cover: coverUrl
             })
             toast.success('Profile Updated Successfully')
             refetch()
@@ -51,7 +65,11 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
     }
 
     const handleImageChange = image => {
-        setImagePreview(URL.createObjectURL(image))
+        if (image) setImagePreview(URL.createObjectURL(image))
+    }
+
+    const handleCoverChange = image => {
+        if (image) setCoverPreview(URL.createObjectURL(image))
     }
 
     return (
@@ -152,6 +170,39 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
                                                                 onClick={() => {
                                                                     setImagePreview(user?.photoURL);
                                                                     document.getElementById('profile_image').value = '';
+                                                                }}
+                                                                className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs shadow-md z-10 cursor-pointer"
+                                                            >
+                                                                X
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Cover Photo</label>
+                                            <input
+                                                type='file'
+                                                id='cover_image'
+                                                {...register('coverImage')}
+                                                onChange={e => handleCoverChange(e.target.files[0])}
+                                                className='mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-lime-50 file:text-lime-700 hover:file:bg-lime-100'
+                                            />
+                                            {coverPreview && (
+                                                <div className="flex justify-start mt-2">
+                                                    <div className="relative w-32 h-16 rounded-md overflow-hidden border border-gray-300 shadow-sm">
+                                                        <img
+                                                            src={coverPreview}
+                                                            alt="Preview"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                        {coverPreview !== dbUser?.cover && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setCoverPreview(dbUser?.cover);
+                                                                    document.getElementById('cover_image').value = '';
                                                                 }}
                                                                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs shadow-md z-10 cursor-pointer"
                                                             >

@@ -97,7 +97,7 @@ const Profile = () => {
         <div className="h-48 md:h-64 overflow-hidden relative">
           <img
             alt='cover photo'
-            src={coverImg}
+            src={dbUser?.cover || coverImg}
             className='w-full h-full object-cover brightness-90'
           />
         </div>
