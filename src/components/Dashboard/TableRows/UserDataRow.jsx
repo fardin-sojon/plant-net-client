@@ -39,44 +39,49 @@ const UserDataRow = ({ user, refetch }) => {
         <p className='text-gray-900 dark:text-white whitespace-no-wrap'>{user?.email}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
-        <p className='text-gray-900 dark:text-white whitespace-no-wrap capitalize'>{user?.role}</p>
+        <span className={`inline-block px-2.5 py-1 text-xs font-bold rounded-full capitalize ${
+          user?.role === 'admin' 
+            ? 'bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border border-purple-200 dark:border-purple-800' 
+            : user?.role === 'seller'
+              ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300 border border-green-200 dark:border-green-800'
+              : 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+        }`}>
+          {user?.role}
+        </span>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
-        {user?.status ? (
-          <p
-            className={`${
-              user.status === 'Verified' ? 'text-green-500' : user.status === 'Requested' ? 'text-yellow-500' : 'text-red-500'
-            } whitespace-no-wrap`}
-          >
-            {user.status}
-          </p>
-        ) : (
-          <p className='text-red-500 whitespace-no-wrap'>Unavailable</p>
-        )}
+        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-full ${
+          user?.status === 'Verified' 
+            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
+            : user?.status === 'Requested'
+              ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 animate-pulse'
+              : 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+        }`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${
+            user?.status === 'Verified' 
+              ? 'bg-emerald-500' 
+              : user?.status === 'Requested'
+                ? 'bg-amber-500'
+                : 'bg-rose-500'
+          }`} />
+          {user?.status || 'Unavailable'}
+        </span>
       </td>
 
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <div className='flex items-center gap-3'>
           <button
             onClick={() => setIsOpen(true)}
-            className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 dark:text-white leading-tight'
+            className='px-3 py-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 border border-emerald-200 dark:border-emerald-800 rounded-lg cursor-pointer transition'
           >
-            <span
-              aria-hidden='true'
-              className='absolute inset-0 bg-green-200 opacity-50 dark:bg-green-600 dark:opacity-100 rounded-full'
-            ></span>
-            <span className='relative text-xs'>Update Role</span>
+            Update Role
           </button>
           
           <button
             onClick={handleDelete}
-            className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-red-900 dark:text-white leading-tight'
+            className='px-3 py-1 text-xs font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg cursor-pointer transition'
           >
-            <span
-              aria-hidden='true'
-              className='absolute inset-0 bg-red-200 opacity-50 dark:bg-red-600 dark:opacity-100 rounded-full'
-            ></span>
-            <span className='relative text-xs'>Delete</span>
+            Delete
           </button>
         </div>
         
