@@ -115,7 +115,7 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
                                                 defaultValue={dbUser?.phone || ''}
                                                 {...register('phone')}
                                                 onInput={(e) => {
-                                                  e.target.value = e.target.value.replace(/\D/g, '');
+                                                  e.target.value = e.target.value.replace(/[^\d+]/g, '');
                                                 }}
                                                 className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-lime-500 focus:ring-lime-500 sm:text-sm border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white'
                                             />
