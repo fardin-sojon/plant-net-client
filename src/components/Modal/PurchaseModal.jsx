@@ -12,11 +12,40 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   const [phone, setPhone] = useState('')
   const [recipientName, setRecipientName] = useState('')
 
+  const [couponCode, setCouponCode] = useState('')
+  const [discount, setDiscount] = useState(0)
+  const [appliedCoupon, setAppliedCoupon] = useState('')
+
   useEffect(() => {
     if (user?.displayName) {
       setRecipientName(user.displayName)
     }
   }, [user])
+
+  useEffect(() => {
+    if (!isOpen) {
+      setCouponCode('')
+      setDiscount(0)
+      setAppliedCoupon('')
+    }
+  }, [isOpen])
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/coupons/apply`, {
+        code: couponCode.trim(),
+        cartTotal: price
+      })
+      setDiscount(data.discount)
+      setAppliedCoupon(couponCode.trim().toUpperCase())
+      toast.success(`Coupon "${couponCode.toUpperCase()}" applied! Saved $${data.discount.toFixed(2)}`)
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Invalid coupon code')
+      setDiscount(0)
+      setAppliedCoupon('')
+    }
+  }
 
   const navigate = useNavigate()
   const handlePayment = async()=>{
@@ -61,6 +90,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
           image,
           seller
         }],
+        couponCode: appliedCoupon || null,
         customer: {
           name: user?.displayName,
           email: user?.email || user?.providerData?.[0]?.email,
@@ -112,8 +142,59 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
               <p className="text-sm text-gray-500 dark:text-gray-300">Customer: {user?.displayName}</p>
             </div>
 
-            <div className="mt-2">
-              <p className="text-sm text-gray-500 dark:text-gray-300">Price: ${price}</p>
+            <div className="mt-2 flex justify-between items-center text-sm font-semibold">
+              <p className="text-gray-500 dark:text-gray-300">Price: ${price}</p>
+              {discount > 0 && (
+                <p className="text-lime-600 dark:text-lime-400">Discount: -${discount.toFixed(2)}</p>
+              )}
+            </div>
+            {discount > 0 && (
+              <div className="mt-2 text-right text-sm font-bold text-gray-800 dark:text-white border-t border-dashed dark:border-gray-700 pt-2">
+                Total Price: ${(price - discount).toFixed(2)}
+              </div>
+            )}
+
+            {/* Coupon Code Section */}
+            <div className="mt-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                Promo Code
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter code"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  disabled={!!appliedCoupon}
+                  className="w-full text-xs px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white uppercase disabled:opacity-50"
+                />
+                {appliedCoupon ? (
+                  <button
+                    onClick={() => {
+                      setAppliedCoupon('')
+                      setCouponCode('')
+                      setDiscount(0)
+                    }}
+                    type="button"
+                    className="px-3 py-1.5 bg-red-500 text-white text-xs font-bold rounded-md hover:bg-red-600 transition cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleApplyCoupon}
+                    type="button"
+                    className="px-3 py-1.5 bg-lime-500 text-white text-xs font-bold rounded-md hover:bg-lime-600 transition cursor-pointer"
+                  >
+                    Apply
+                  </button>
+                )}
+              </div>
+              {appliedCoupon && (
+                <p className="text-xs text-lime-600 dark:text-lime-400 font-bold mt-1">
+                  ✓ Code "{appliedCoupon}" applied
+                </p>
+              )}
             </div>
             
             {/* Address & Phone Inputs */}
