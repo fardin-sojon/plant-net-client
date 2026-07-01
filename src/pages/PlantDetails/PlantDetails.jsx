@@ -296,7 +296,7 @@ const PlantDetails = () => {
 
           <div className="flex gap-4">
             <Button
-              disabled={quantity <= 0 || user?.email === seller?.email}
+              disabled={quantity <= 0}
               onClick={() => {
                 if (!user) {
                   navigate('/login');
@@ -307,8 +307,6 @@ const PlantDetails = () => {
               label={
                 quantity <= 0
                   ? "Out of Stock"
-                  : user?.email === seller?.email
-                  ? "Your Plant"
                   : "Purchase Now"
               }
             />

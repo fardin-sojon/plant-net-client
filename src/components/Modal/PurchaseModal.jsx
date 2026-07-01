@@ -60,10 +60,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
       return
     }
 
-    if (user?.email === seller?.email) {
-      toast.error('You cannot buy your own plant!')
-      return
-    }
+
 
     if (!address.trim() || !phone.trim()) {
       toast.error('Please fill in both address and phone number!')
