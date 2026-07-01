@@ -10,12 +10,14 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
     const [loading, setLoading] = useState(false)
     const [imagePreview, setImagePreview] = useState(user?.photoURL)
     const [coverPreview, setCoverPreview] = useState(dbUser?.cover)
+    const [coverPosition, setCoverPosition] = useState(dbUser?.coverPosition ? parseInt(dbUser.coverPosition) : 50)
     const { register, handleSubmit } = useForm()
 
     useEffect(() => {
         if (isOpen) {
             setImagePreview(user?.photoURL)
             setCoverPreview(dbUser?.cover)
+            setCoverPosition(dbUser?.coverPosition ? parseInt(dbUser.coverPosition) : 50)
         }
     }, [isOpen, user, dbUser])
 
@@ -52,7 +54,8 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
                 email: user?.email || user?.providerData[0]?.email,
                 address: data.address,
                 phone: data.phone,
-                cover: coverUrl
+                cover: coverUrl,
+                coverPosition: `${coverPosition}%`
             })
             toast.success('Profile Updated Successfully')
             refetch()
@@ -190,11 +193,12 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
                                                 className='mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-lime-50 file:text-lime-700 hover:file:bg-lime-100'
                                             />
                                             {coverPreview && (
-                                                <div className="flex justify-start mt-2">
-                                                    <div className="relative w-32 h-16 rounded-md overflow-hidden border border-gray-300 shadow-sm">
+                                                <div className="space-y-2 mt-2">
+                                                    <div className="relative w-full h-24 rounded-md overflow-hidden border border-gray-300 shadow-sm">
                                                         <img
                                                             src={coverPreview}
                                                             alt="Preview"
+                                                            style={{ objectPosition: `center ${coverPosition}%` }}
                                                             className="w-full h-full object-cover"
                                                         />
                                                         {coverPreview !== dbUser?.cover && (
@@ -209,6 +213,19 @@ const UpdateProfileModal = ({ isOpen, setIsOpen, dbUser, refetch }) => {
                                                                 X
                                                             </button>
                                                         )}
+                                                    </div>
+                                                    <div>
+                                                      <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                                                        Reposition Cover (Drag slider to adjust vertical alignment):
+                                                      </label>
+                                                      <input
+                                                        type="range"
+                                                        min="0"
+                                                        max="100"
+                                                        value={coverPosition}
+                                                        onChange={(e) => setCoverPosition(parseInt(e.target.value))}
+                                                        className="w-full accent-lime-500 cursor-pointer"
+                                                      />
                                                     </div>
                                                 </div>
                                             )}

@@ -98,6 +98,7 @@ const Profile = () => {
           <img
             alt='cover photo'
             src={dbUser?.cover || coverImg}
+            style={{ objectPosition: `center ${dbUser?.coverPosition || '50%'}` }}
             className='w-full h-full object-cover brightness-90'
           />
         </div>
