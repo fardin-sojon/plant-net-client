@@ -1,12 +1,14 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useState, useEffect } from "react";
 import useAuth from '../../hooks/useAuth'
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   const {user} = useAuth()
+  const axiosSecure = useAxiosSecure()
   const {_id, name, category, quantity, price, description, image, seller } = plant
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
@@ -16,11 +18,29 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   const [discount, setDiscount] = useState(0)
   const [appliedCoupon, setAppliedCoupon] = useState('')
 
+  const email = user?.email || user?.providerData?.[0]?.email
+
+  // Fetch dbUser to get saved address and phone
+  const { data: dbUser } = useQuery({
+    queryKey: ['dbUser', email],
+    enabled: !!email && isOpen,
+    queryFn: async () => {
+      const res = await axiosSecure(`/users/${email}`)
+      return res.data
+    }
+  })
+
   useEffect(() => {
-    if (user?.displayName) {
+    if (dbUser) {
+      if (dbUser.name) setRecipientName(dbUser.name)
+      else if (user?.displayName) setRecipientName(user.displayName)
+
+      if (dbUser.address) setAddress(dbUser.address)
+      if (dbUser.phone) setPhone(dbUser.phone)
+    } else if (user?.displayName) {
       setRecipientName(user.displayName)
     }
-  }, [user])
+  }, [dbUser, user, isOpen])
 
   useEffect(() => {
     if (!isOpen) {
@@ -33,7 +53,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/coupons/apply`, {
+      const { data } = await axiosSecure.post('/coupons/apply', {
         code: couponCode.trim(),
         cartTotal: price
       })

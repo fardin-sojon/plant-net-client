@@ -6,6 +6,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import LoadingSpinner from '../../components/Shared/LoadingSpinner'
+import { useQuery } from '@tanstack/react-query'
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart()
@@ -21,11 +22,29 @@ const Cart = () => {
   const [discount, setDiscount] = useState(0)
   const [appliedCoupon, setAppliedCoupon] = useState('')
 
+  const email = user?.email || user?.providerData?.[0]?.email
+
+  // Fetch dbUser to get saved address and phone
+  const { data: dbUser } = useQuery({
+    queryKey: ['dbUser', email],
+    enabled: !!email,
+    queryFn: async () => {
+      const res = await axiosSecure(`/users/${email}`)
+      return res.data
+    }
+  })
+
   useEffect(() => {
-    if (user?.displayName) {
+    if (dbUser) {
+      if (dbUser.name) setRecipientName(dbUser.name)
+      else if (user?.displayName) setRecipientName(user.displayName)
+
+      if (dbUser.address) setAddress(dbUser.address)
+      if (dbUser.phone) setPhone(dbUser.phone)
+    } else if (user?.displayName) {
       setRecipientName(user.displayName)
     }
-  }, [user])
+  }, [dbUser, user])
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return
