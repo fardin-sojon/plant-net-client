@@ -67,7 +67,7 @@ const PlantDetails = () => {
   const { name, image, description, category, quantity, price, seller } = plant;
 
   // Mock secondary angles using the primary image with styling
-  const galleryImages = image ? [image, image, image] : [];
+  const galleryImages = image ? [image] : [];
 
   // Plant Care fallbacks based on category
   const careGuide = {
@@ -124,7 +124,8 @@ const PlantDetails = () => {
       }
       refetchWishlist();
     } catch (err) {
-      toast.error("Error updating wishlist");
+      console.error("Wishlist error:", err);
+      toast.error("Error updating wishlist: " + (err.response?.data?.message || err.message));
     }
   };
 
@@ -196,25 +197,27 @@ const PlantDetails = () => {
           </div>
 
           {/* Thumbnail Selectors */}
-          <div className="flex gap-4">
-            {galleryImages.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedImageIndex(idx)}
-                className={`w-20 h-20 rounded-xl overflow-hidden border-2 cursor-pointer transition ${
-                  selectedImageIndex === idx ? 'border-lime-500 scale-105 shadow-md' : 'border-base-300 dark:border-gray-700 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img 
-                  src={img} 
-                  alt="angle" 
-                  className={`w-full h-full object-cover ${
-                    idx === 1 ? 'hue-rotate-15' : idx === 2 ? 'saturate-150' : ''
-                  }`} 
-                />
-              </button>
-            ))}
-          </div>
+          {galleryImages.length > 1 && (
+            <div className="flex gap-4">
+              {galleryImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedImageIndex(idx)}
+                  className={`w-20 h-20 rounded-xl overflow-hidden border-2 cursor-pointer transition ${
+                    selectedImageIndex === idx ? 'border-lime-500 scale-105 shadow-md' : 'border-base-300 dark:border-gray-700 opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  <img 
+                    src={img} 
+                    alt="angle" 
+                    className={`w-full h-full object-cover ${
+                      idx === 1 ? 'hue-rotate-15' : idx === 2 ? 'saturate-150' : ''
+                    }`} 
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Info Area */}
