@@ -6,7 +6,7 @@ import LoadingSpinner from "../Shared/LoadingSpinner";
 import SkeletonCard from "../Shared/SkeletonCard";
 import { Link } from "react-router";
 
-const Plants = ({ limit }) => {
+const Plants = ({ limit, search = '', category = 'All', maxPrice = 200, stockStatus = 'All' }) => {
   const {
     data: plants = [],
     isLoading,
@@ -31,7 +31,20 @@ const Plants = ({ limit }) => {
     );
   }
 
-  const displayPlants = limit ? plants.slice(0, limit) : plants;
+  const filteredPlants = plants.filter(plant => {
+    const matchesSearch = plant.name.toLowerCase().includes(search.toLowerCase())
+    const matchesCategory = category === 'All' || plant.category.toLowerCase() === category.toLowerCase()
+    const matchesPrice = plant.price <= maxPrice
+    const matchesStock = stockStatus === 'All'
+      ? true
+      : stockStatus === 'In Stock'
+        ? plant.quantity > 0
+        : plant.quantity === 0
+
+    return matchesSearch && matchesCategory && matchesPrice && matchesStock
+  })
+
+  const displayPlants = limit ? filteredPlants.slice(0, limit) : filteredPlants;
 
   return (
     <Container>

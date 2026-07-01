@@ -17,11 +17,53 @@ const Cart = () => {
   const [phone, setPhone] = useState('')
   const [recipientName, setRecipientName] = useState('')
 
+  const [couponCode, setCouponCode] = useState('')
+  const [discount, setDiscount] = useState(0)
+  const [appliedCoupon, setAppliedCoupon] = useState('')
+
   useEffect(() => {
     if (user?.displayName) {
       setRecipientName(user.displayName)
     }
   }, [user])
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return
+    try {
+      const { data } = await axiosSecure.post('/coupons/apply', {
+        code: couponCode.trim(),
+        cartTotal: cartTotal
+      })
+      setDiscount(data.discount)
+      setAppliedCoupon(couponCode.trim().toUpperCase())
+      toast.success(`Coupon "${couponCode.toUpperCase()}" applied! Saved $${data.discount.toFixed(2)}`)
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Invalid coupon code')
+      setDiscount(0)
+      setAppliedCoupon('')
+    }
+  }
+
+  // Recalculate coupon if cart total changes
+  useEffect(() => {
+    if (appliedCoupon) {
+      const recalculate = async () => {
+        try {
+          const { data } = await axiosSecure.post('/coupons/apply', {
+            code: appliedCoupon,
+            cartTotal: cartTotal
+          })
+          setDiscount(data.discount)
+        } catch (err) {
+          setDiscount(0)
+          setAppliedCoupon('')
+        }
+      }
+      recalculate()
+    } else {
+      setDiscount(0)
+    }
+  }, [cartTotal, appliedCoupon, axiosSecure])
 
   const handleCheckout = async () => {
     if (!user) {
@@ -44,6 +86,7 @@ const Cart = () => {
       // 1. Send cart items to backend to create order and get payment session
       const { data } = await axiosSecure.post('/create-checkout-session', {
         items: cart,
+        couponCode: appliedCoupon || null,
         customer: {
             name: user?.displayName,
             email: user?.email || user?.providerData?.[0]?.email,
@@ -134,14 +177,60 @@ const Cart = () => {
                 <span className='text-gray-600 dark:text-gray-300'>Subtotal</span>
                 <span className='font-semibold dark:text-white'>${cartTotal.toFixed(2)}</span>
               </div>
-               <div className='flex justify-between items-center mb-6'>
+               <div className='flex justify-between items-center mb-4'>
                 <span className='text-gray-600 dark:text-gray-300'>Shipping</span>
-                <span className='font-semibold dark:text-white'>Calculated at next step</span>
+                <span className='font-semibold dark:text-white'>Free</span>
               </div>
+
+              {/* Promo Coupon Section */}
+              <div className="border-t pt-4 mb-4 dark:border-gray-700">
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase">Promo Code</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    disabled={!!appliedCoupon}
+                    className="flex-1 text-sm px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-md focus:outline-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white uppercase disabled:opacity-50"
+                  />
+                  {appliedCoupon ? (
+                    <button
+                      onClick={() => {
+                        setAppliedCoupon('')
+                        setCouponCode('')
+                        setDiscount(0)
+                      }}
+                      className="px-3 py-1.5 bg-red-500 text-white text-xs font-bold rounded-md hover:bg-red-600 transition cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-3 py-1.5 bg-lime-500 text-white text-xs font-bold rounded-md hover:bg-lime-600 transition cursor-pointer"
+                    >
+                      Apply
+                    </button>
+                  )}
+                </div>
+                {appliedCoupon && (
+                  <p className="text-xs text-lime-600 dark:text-lime-400 font-bold mt-1.5">
+                    ✓ Code "{appliedCoupon}" applied
+                  </p>
+                )}
+              </div>
+
+              {discount > 0 && (
+                <div className="flex justify-between items-center mb-4 text-lime-600 dark:text-lime-400 font-bold text-sm">
+                  <span>Promo Discount</span>
+                  <span>-${discount.toFixed(2)}</span>
+                </div>
+              )}
               
               <div className='flex justify-between items-center mb-6 text-xl font-bold border-t pt-4 dark:border-gray-700 dark:text-white'>
                  <span>Total</span>
-                 <span>${cartTotal.toFixed(2)}</span>
+                 <span>${(cartTotal - discount).toFixed(2)}</span>
               </div>
 
               {/* Shipping Info Inputs */}

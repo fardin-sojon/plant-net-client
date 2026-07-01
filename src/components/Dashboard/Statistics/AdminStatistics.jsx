@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import LoadingSpinner from '../../Shared/LoadingSpinner'
 import { useState } from 'react'
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 
 const AdminStatistics = () => {
   const axiosSecure = useAxiosSecure()
@@ -130,7 +131,7 @@ const AdminStatistics = () => {
         </div>
 
         <div className='mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3'>
-          {/* Sales Bar Chart */}
+          {/* Sales Recharts Area Chart */}
           <div className='relative flex flex-col bg-clip-border rounded-xl bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-md xl:col-span-2 p-6'>
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -161,135 +162,69 @@ const AdminStatistics = () => {
               </div>
             </div>
 
-            {/* SVG Chart Container */}
-            <div className="relative h-64 w-full">
-              {/* Tooltip Overlay */}
-              {hoveredIndex !== null && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: `${(hoveredIndex / (monthlyRevenue.length - 1)) * 80 + 10}%`,
-                    top: '10px',
-                    transform: 'translateX(-50%)',
-                    pointerEvents: 'none',
-                    animation: 'tooltipFadeIn 0.15s ease-out'
-                  }}
-                  className="bg-gray-900/95 dark:bg-gray-950/95 text-white text-xs rounded-xl p-3 shadow-xl z-20 flex flex-col gap-1 border border-gray-800"
-                >
-                  <style>{`
-                    @keyframes tooltipFadeIn {
-                      from { opacity: 0; transform: translateX(-50%) translateY(4px); }
-                      to { opacity: 1; transform: translateX(-50%) translateY(0); }
-                    }
-                  `}</style>
-                  <p className="font-bold text-gray-400">{monthlyRevenue[hoveredIndex].month}</p>
-                  <p className="font-semibold">
-                    Revenue: <span className="text-lime-400 font-bold">${monthlyRevenue[hoveredIndex].revenue} USD</span>
-                  </p>
-                  <p className="font-semibold">
-                    Orders: <span className="text-blue-400 font-bold">{monthlyRevenue[hoveredIndex].orders}</span>
-                  </p>
-                </div>
-              )}
-
-              {/* The SVG element */}
-              <svg viewBox="0 0 500 200" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#84cc16" stopOpacity="0.45" />
-                    <stop offset="100%" stopColor="#84cc16" stopOpacity="0.0" />
-                  </linearGradient>
-                </defs>
-
-                {/* Grid Lines */}
-                <line x1="0" y1="40" x2="500" y2="40" stroke="rgba(156, 163, 175, 0.12)" strokeDasharray="4 4" />
-                <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(156, 163, 175, 0.12)" strokeDasharray="4 4" />
-                <line x1="0" y1="140" x2="500" y2="140" stroke="rgba(156, 163, 175, 0.12)" strokeDasharray="4 4" />
-                <line x1="0" y1="180" x2="500" y2="180" stroke="rgba(156, 163, 175, 0.25)" strokeWidth="1.5" />
-
-                {/* Area Fill & Path Line */}
-                {(() => {
-                  const maxVal = Math.max(...monthlyRevenue.map(d => activeTab === 'revenue' ? d.revenue : d.orders), 1);
-                  const spacing = 500 / (monthlyRevenue.length - 1);
-                  const points = monthlyRevenue.map((item, index) => {
-                    const x = index * spacing;
-                    const val = activeTab === 'revenue' ? item.revenue : item.orders;
-                    const y = 180 - (val / maxVal) * 145;
-                    return { x, y };
-                  });
-
-                  const pathD = points.reduce((acc, p, i) => `${acc}${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`, '');
-                  const areaD = points.length > 0 ? `${pathD} L ${points[points.length - 1].x} 180 L ${points[0].x} 180 Z` : '';
-
-                  return (
-                    <>
-                      {/* Area Fill */}
-                      <path d={areaD} fill="url(#chartGradient)" className="transition-all duration-500 ease-in-out" />
-                      
-                      {/* Stroke Line */}
-                      <path d={pathD} fill="none" stroke="#84cc16" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-all duration-500 ease-in-out" />
-
-                      {/* Tooltip Vertical Focus Line */}
-                      {hoveredIndex !== null && (
-                        <line
-                          x1={points[hoveredIndex].x}
-                          y1="10"
-                          x2={points[hoveredIndex].x}
-                          y2="180"
-                          stroke="#84cc16"
-                          strokeWidth="1.5"
-                          strokeDasharray="3 3"
-                        />
-                      )}
-
-                      {/* Active points */}
-                      {points.map((p, i) => (
-                        <circle
-                          key={i}
-                          cx={p.x}
-                          cy={p.y}
-                          r={hoveredIndex === i ? 6 : 4}
-                          fill={hoveredIndex === i ? '#84cc16' : '#ffffff'}
-                          stroke="#84cc16"
-                          strokeWidth="2.5"
-                          className="transition-all duration-150 ease-out"
-                        />
-                      ))}
-
-                      {/* Interactive Hover Columns */}
-                      {points.map((p, i) => {
-                        const targetWidth = 500 / monthlyRevenue.length;
+            {/* Recharts Container */}
+            <div className="h-64 w-full text-xs">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={monthlyRevenue} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#84cc16" stopOpacity={0.45} />
+                      <stop offset="95%" stopColor="#84cc16" stopOpacity={0.0} />
+                    </linearGradient>
+                    <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.45} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(156, 163, 175, 0.12)" />
+                  <XAxis 
+                    dataKey="month" 
+                    tickLine={false} 
+                    axisLine={false} 
+                    stroke="currentColor" 
+                    className="text-gray-500 dark:text-gray-400 font-semibold"
+                  />
+                  <YAxis 
+                    tickLine={false} 
+                    axisLine={false} 
+                    stroke="currentColor" 
+                    className="text-gray-500 dark:text-gray-400 font-semibold"
+                  />
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
                         return (
-                          <rect
-                            key={i}
-                            x={p.x - targetWidth / 2}
-                            y="0"
-                            width={targetWidth}
-                            height="180"
-                            fill="transparent"
-                            className="cursor-pointer"
-                            onMouseEnter={() => setHoveredIndex(i)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                          />
-                        )
-                      })}
-                    </>
-                  );
-                })()}
-              </svg>
-            </div>
-
-            {/* X-Axis Labels */}
-            <div className="flex justify-between mt-2 px-1 text-xs font-semibold text-gray-500 dark:text-gray-400">
-              {monthlyRevenue.map((item, index) => (
-                <span key={index}>{item.month}</span>
-              ))}
+                          <div className="bg-gray-900/95 dark:bg-gray-950/95 text-white text-xs rounded-xl p-3 shadow-xl border border-gray-800 flex flex-col gap-1">
+                            <p className="font-bold text-gray-400">{data.month}</p>
+                            <p className="font-semibold">
+                              Revenue: <span className="text-lime-400 font-bold">${data.revenue} USD</span>
+                            </p>
+                            <p className="font-semibold">
+                              Orders: <span className="text-blue-400 font-bold">{data.orders}</span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey={activeTab === 'revenue' ? 'revenue' : 'orders'}
+                    stroke={activeTab === 'revenue' ? '#84cc16' : '#3b82f6'}
+                    strokeWidth={3}
+                    fill={activeTab === 'revenue' ? 'url(#colorRevenue)' : 'url(#colorOrders)'}
+                    className="transition-all duration-300"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
 
             {/* Chart Legend */}
             <div className="flex items-center gap-4 mt-5 text-xs font-medium text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
               <div className="flex items-center gap-1.5">
-                <span className="w-3.5 h-1.5 bg-lime-500 rounded-full"></span>
+                <span className={`w-3.5 h-1.5 rounded-full ${activeTab === 'revenue' ? 'bg-lime-500' : 'bg-blue-500'}`}></span>
                 <span>{activeTab === 'revenue' ? 'Revenue (USD)' : 'Orders Placed'}</span>
               </div>
             </div>

@@ -27,6 +27,9 @@ import PrivacyPolicy from '../pages/Legal/PrivacyPolicy'
 import TermsOfService from '../pages/Legal/TermsOfService'
 import ReturnPolicy from '../pages/Legal/ReturnPolicy'
 
+import Wishlist from '../pages/Dashboard/Customer/Wishlist'
+import ManageCoupons from '../pages/Dashboard/Admin/ManageCoupons'
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -161,6 +164,22 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <ManageOrders />
           </PrivateRoute>
+        ),
+      },
+      {
+        path: 'wishlist',
+        element: (
+          <PrivateRoute>
+            <Wishlist />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'manage-coupons',
+        element: (
+          <AdminRoute>
+            <ManageCoupons />
+          </AdminRoute>
         ),
       },
     ],

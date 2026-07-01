@@ -5,6 +5,8 @@ import { useState } from 'react'
 import BecomeSellerModal from '../../../Modal/BecomeSellerModal'
 import useRole from '../../../../hooks/useRole'
 
+import { FaHeart } from 'react-icons/fa'
+
 const CustomerMenu = () => {
   const [role] = useRole()
   const [isOpen, setIsOpen] = useState(false)
@@ -16,6 +18,7 @@ const CustomerMenu = () => {
   return (
     <>
       <MenuItem icon={BsFingerprint} label='My Orders' address='my-orders' />
+      <MenuItem icon={FaHeart} label='My Wishlist' address='wishlist' />
 
       {role === 'customer' && (
         <div

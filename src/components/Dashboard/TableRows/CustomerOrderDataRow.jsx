@@ -61,7 +61,53 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
         <p className='text-gray-900 dark:text-white'>{quantity}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
-        <p className='text-gray-900 dark:text-white'>{status}</p>
+        {(() => {
+          if (status === 'Cancelled') {
+            return (
+              <span className="px-2.5 py-1 bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400 rounded-full text-xs font-bold uppercase tracking-wider">
+                Cancelled
+              </span>
+            )
+          }
+          let step = 0
+          if (status === 'In Progress' || status === 'Shipped') step = 1
+          if (status === 'Delivered') step = 2
+
+          return (
+            <div className="flex flex-col gap-1 w-32">
+              <div className="flex items-center justify-between relative w-full px-2">
+                <div className="absolute top-1/2 left-2 right-2 h-0.5 bg-gray-200 dark:bg-gray-700 -translate-y-1/2 z-0">
+                  <div 
+                    className="h-full bg-lime-500 transition-all duration-500" 
+                    style={{ width: `${step === 0 ? '0%' : step === 1 ? '50%' : '100%'}` }}
+                  />
+                </div>
+
+                <div 
+                  className={`w-3 h-3 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
+                    step >= 0 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-gray-200 dark:bg-gray-700'
+                  }`}
+                  title="Ordered"
+                />
+                <div 
+                  className={`w-3 h-3 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
+                    step >= 1 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600'
+                  }`}
+                  title="In Progress"
+                />
+                <div 
+                  className={`w-3 h-3 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
+                    step >= 2 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600'
+                  }`}
+                  title="Delivered"
+                />
+              </div>
+              <div className="text-[10px] font-bold text-lime-600 dark:text-lime-400 uppercase text-center mt-1">
+                {status}
+              </div>
+            </div>
+          )
+        })()}
       </td>
 
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
