@@ -6,7 +6,7 @@ import LoadingSpinner from "../Shared/LoadingSpinner";
 import SkeletonCard from "../Shared/SkeletonCard";
 import { Link } from "react-router";
 
-const Plants = ({ limit, search = '', category = 'All', maxPrice = 200, stockStatus = 'All' }) => {
+const Plants = ({ limit, search = '', category = 'All', sortBy = 'default', stockStatus = 'All' }) => {
   const {
     data: plants = [],
     isLoading,
@@ -34,17 +34,25 @@ const Plants = ({ limit, search = '', category = 'All', maxPrice = 200, stockSta
   const filteredPlants = plants.filter(plant => {
     const matchesSearch = plant.name.toLowerCase().includes(search.toLowerCase())
     const matchesCategory = category === 'All' || plant.category.toLowerCase() === category.toLowerCase()
-    const matchesPrice = plant.price <= maxPrice
     const matchesStock = stockStatus === 'All'
       ? true
       : stockStatus === 'In Stock'
         ? plant.quantity > 0
         : plant.quantity === 0
 
-    return matchesSearch && matchesCategory && matchesPrice && matchesStock
+    return matchesSearch && matchesCategory && matchesStock
   })
 
-  const displayPlants = limit ? filteredPlants.slice(0, limit) : filteredPlants;
+  // Sort the plants array
+  const sortedPlants = [...filteredPlants].sort((a, b) => {
+    if (sortBy === 'low-to-high') return a.price - b.price
+    if (sortBy === 'high-to-low') return b.price - a.price
+    if (sortBy === 'name-a-z') return a.name.localeCompare(b.name)
+    if (sortBy === 'name-z-a') return b.name.localeCompare(a.name)
+    return 0
+  })
+
+  const displayPlants = limit ? sortedPlants.slice(0, limit) : sortedPlants;
 
   return (
     <Container>

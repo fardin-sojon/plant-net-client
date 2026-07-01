@@ -5,7 +5,7 @@ import Container from '../../components/Shared/Container'
 const Shop = () => {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
-  const [maxPrice, setMaxPrice] = useState(200)
+  const [sortBy, setSortBy] = useState('default')
   const [stockStatus, setStockStatus] = useState('All')
 
   return (
@@ -67,26 +67,26 @@ const Shop = () => {
             </select>
           </div>
 
-          {/* Price Range Slider */}
-          <div className="w-full md:w-56">
-            <div className="flex justify-between text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              <span>Max Price</span>
-              <span className="text-lime-500 dark:text-lime-400">${maxPrice}</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="200"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-              className="w-full accent-lime-500 cursor-pointer py-2"
-            />
+          {/* Sort By Dropdown */}
+          <div className="w-full md:w-48">
+            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Sort By</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl border border-base-300 dark:border-gray-700 bg-base-100 dark:bg-gray-900 text-gray-800 dark:text-white focus:ring-2 focus:ring-lime-500 focus:outline-none transition-all"
+            >
+              <option value="default">Default</option>
+              <option value="low-to-high">Price: Low to High</option>
+              <option value="high-to-low">Price: High to Low</option>
+              <option value="name-a-z">Name: A to Z</option>
+              <option value="name-z-a">Name: Z to A</option>
+            </select>
           </div>
         </div>
       </Container>
       
       {/* Plants Grid */}
-      <Plants search={search} category={category} maxPrice={maxPrice} stockStatus={stockStatus} />
+      <Plants search={search} category={category} sortBy={sortBy} stockStatus={stockStatus} />
     </div>
   )
 }
