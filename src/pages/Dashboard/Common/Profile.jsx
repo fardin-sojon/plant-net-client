@@ -111,17 +111,17 @@ const Profile = () => {
                 className='w-full h-full object-cover'
               />
             </div>
-            <div className="text-center md:text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <h1 className="text-xl md:text-2xl font-extrabold text-gray-800 dark:text-white leading-tight sm:whitespace-nowrap">
-                  {user?.displayName}
-                </h1>
-                <span className="inline-block px-3 py-1 bg-lime-500 text-white text-xs font-bold rounded-full uppercase tracking-wider self-center sm:self-auto w-fit">
+            <div className="text-center md:text-left space-y-1.5">
+              <h1 className="text-xl md:text-2xl font-extrabold text-gray-800 dark:text-white leading-tight">
+                {user?.displayName}
+              </h1>
+              <div className="flex justify-center md:justify-start">
+                <span className="inline-block px-3 py-0.5 bg-lime-500 text-white text-[10px] font-bold rounded-full uppercase tracking-wider">
                   {role}
                 </span>
               </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5 flex items-center justify-center md:justify-start gap-1">
-                <FaCalendarAlt className="text-xs" />
+              <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-center md:justify-start gap-1 pt-0.5">
+                <FaCalendarAlt className="text-[10px]" />
                 <span>Member Since: {joinedDate}</span>
               </p>
             </div>
