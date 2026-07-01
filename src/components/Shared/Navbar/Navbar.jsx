@@ -175,7 +175,12 @@ const Navbar = () => {
 
                   {/* User Info Header */}
                   {user && (
-                    <div style={{ padding: '14px 18px 10px', borderBottom: '1px solid rgba(74,222,128,0.15)' }}>
+                    <Link 
+                      to='/dashboard/profile' 
+                      onClick={() => setIsOpen(false)} 
+                      style={{ display: 'block', padding: '14px 18px 10px', borderBottom: '1px solid rgba(74,222,128,0.15)', textDecoration: 'none' }}
+                      className="hover:bg-lime-50/30 dark:hover:bg-gray-700/50 transition-colors"
+                    >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img
                           src={user.photoURL || avatarImg}
@@ -184,15 +189,21 @@ const Navbar = () => {
                           referrerPolicy='no-referrer'
                         />
                         <div style={{ overflow: 'hidden' }}>
-                          <p style={{ fontSize: '13px', fontWeight: 700, color: '#111827', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '130px' }}>
+                          <p 
+                            className="text-gray-900 dark:text-white"
+                            style={{ fontSize: '13px', fontWeight: 700, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '130px' }}
+                          >
                             {user.displayName || 'User'}
                           </p>
-                          <p style={{ fontSize: '11px', color: '#6b7280', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '130px' }}>
-                            {user.email}
+                          <p 
+                            className="text-gray-500 dark:text-gray-400"
+                            style={{ fontSize: '11px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '130px' }}
+                          >
+                            {user.email || user?.providerData?.[0]?.email}
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   )}
 
                   <div style={{ padding: '6px 0' }}>
