@@ -15,6 +15,10 @@ const PlantDetails = () => {
   let [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const [zoomStyle, setZoomStyle] = useState({
+    transformOrigin: 'center',
+    transform: 'scale(1)'
+  });
 
   const {
     data: plant = {},
@@ -40,6 +44,23 @@ const PlantDetails = () => {
     setIsOpen(false);
   };
 
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomStyle({
+      transformOrigin: `${x}% ${y}%`,
+      transform: 'scale(1.5)'
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setZoomStyle({
+      transformOrigin: 'center',
+      transform: 'scale(1)'
+    });
+  };
+
   if (isLoading) return <LoadingSpinner />;
 
   return (
@@ -48,9 +69,14 @@ const PlantDetails = () => {
         {/* Header */}
         <div className="flex flex-col gap-6 flex-1">
           <div>
-            <div className="w-full overflow-hidden rounded-xl">
+            <div 
+              className="w-full overflow-hidden rounded-xl cursor-zoom-in relative"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
               <img
-                className="object-cover w-full md:h-[415px]"
+                className="object-cover w-full md:h-[415px] transition-transform duration-150 ease-out"
+                style={zoomStyle}
                 referrerPolicy="no-referrer"
                 src={image}
                 alt={name}

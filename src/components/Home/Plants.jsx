@@ -3,6 +3,7 @@ import Container from "../Shared/Container";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import SkeletonCard from "../Shared/SkeletonCard";
 import { Link } from "react-router";
 
 const Plants = ({ limit }) => {
@@ -18,7 +19,17 @@ const Plants = ({ limit }) => {
     },
   });
   
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) {
+    return (
+      <Container>
+        <div className="pt-12 pb-12 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 w-full animate-pulse">
+          {Array.from({ length: limit || 10 }).map((_, idx) => (
+            <SkeletonCard key={idx} />
+          ))}
+        </div>
+      </Container>
+    );
+  }
 
   const displayPlants = limit ? plants.slice(0, limit) : plants;
 
