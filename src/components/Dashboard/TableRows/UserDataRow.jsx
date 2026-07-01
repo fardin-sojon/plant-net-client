@@ -29,6 +29,18 @@ const UserDataRow = ({ user, refetch }) => {
       }
     })
   }
+  const handleApprove = async () => {
+    try {
+      await axiosSecure.patch(`/users/update/${user?.email}`, {
+        role: 'seller',
+        status: 'Verified'
+      })
+      refetch()
+      toast.success('Seller request approved successfully!')
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message)
+    }
+  }
 
   return (
     <tr>
@@ -70,6 +82,15 @@ const UserDataRow = ({ user, refetch }) => {
 
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <div className='flex items-center gap-3'>
+          {user?.status === 'Requested' && (
+            <button
+              onClick={handleApprove}
+              className='px-3 py-1 text-xs font-bold text-white bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition shadow-xs'
+            >
+              Approve Seller
+            </button>
+          )}
+
           <button
             onClick={() => setIsOpen(true)}
             className='px-3 py-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 border border-emerald-200 dark:border-emerald-800 rounded-lg cursor-pointer transition'
