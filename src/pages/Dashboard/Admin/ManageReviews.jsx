@@ -43,8 +43,8 @@ const ManageReviews = () => {
   // Filter reviews
   const filteredReviews = reviews.filter((review) => {
     const comment = review.comment?.toLowerCase() || ''
-    const email = review.customerEmail?.toLowerCase() || ''
-    const name = review.customerName?.toLowerCase() || ''
+    const email = (review.email || review.customerEmail)?.toLowerCase() || ''
+    const name = (review.name || review.customerName)?.toLowerCase() || ''
     const search = searchTerm.toLowerCase()
     return comment.includes(search) || email.includes(search) || name.includes(search)
   })
@@ -88,15 +88,17 @@ const ManageReviews = () => {
               <div>
                 <div className='flex items-center gap-3 mb-4'>
                   <img
-                    src={review.customerImage || 'https://i.ibb.co.com/CFxm3Oy/placeholder.jpg'}
-                    alt={review.customerName}
+                    src={review.avatar || review.customerImage || 'https://i.ibb.co.com/CFxm3Oy/placeholder.jpg'}
+                    alt={review.name || review.customerName}
                     className='w-10 h-10 rounded-full object-cover border-2 border-lime-400'
                   />
                   <div>
                     <h3 className='font-semibold text-gray-800 dark:text-white text-sm'>
-                      {review.customerName}
+                      {review.name || review.customerName}
                     </h3>
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>{review.customerEmail}</p>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                      {review.email || review.customerEmail || 'No Email'}
+                    </p>
                   </div>
                 </div>
 
