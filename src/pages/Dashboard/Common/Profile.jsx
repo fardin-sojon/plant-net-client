@@ -133,13 +133,17 @@ const Profile = () => {
             >
               Update Profile
             </button>
-            {user?.providerData[0]?.providerId === 'password' && (
+            {user?.providerData?.some(p => p.providerId === 'password') ? (
               <button
                 onClick={() => setIsChangePasswordModalOpen(true)}
                 className="px-5 py-2.5 bg-base-100 hover:bg-base-200 border border-base-300 dark:border-gray-600 text-gray-800 dark:text-white font-bold rounded-xl transition shadow-xs text-sm cursor-pointer text-center whitespace-nowrap"
               >
                 Change Password
               </button>
+            ) : (
+              <span className="px-5 py-2.5 text-xs text-gray-500 dark:text-gray-400 italic flex items-center bg-gray-50 dark:bg-gray-900/40 rounded-xl border border-gray-150 dark:border-gray-700/60">
+                Logged in via Google
+              </span>
             )}
           </div>
         </div>
