@@ -4,8 +4,7 @@ import MenuItem from './MenuItem'
 import { useState } from 'react'
 import BecomeSellerModal from '../../../Modal/BecomeSellerModal'
 import useRole from '../../../../hooks/useRole'
-
-import { FaHeart } from 'react-icons/fa'
+import { FaHeart, FaLeaf } from 'react-icons/fa'
 
 const CustomerMenu = () => {
   const [role] = useRole()
@@ -19,6 +18,7 @@ const CustomerMenu = () => {
     <>
       <MenuItem icon={BsFingerprint} label='My Orders' address='my-orders' />
       <MenuItem icon={FaHeart} label='My Wishlist' address='wishlist' />
+      <MenuItem icon={FaLeaf} label='Plant Care' address='plant-care' />
 
       {role === 'customer' && (
         <div

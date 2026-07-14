@@ -29,6 +29,9 @@ import ReturnPolicy from '../pages/Legal/ReturnPolicy'
 
 import Wishlist from '../pages/Dashboard/Customer/Wishlist'
 import ManageCoupons from '../pages/Dashboard/Admin/ManageCoupons'
+import ManageReviews from '../pages/Dashboard/Admin/ManageReviews'
+import SellerAnalytics from '../pages/Dashboard/Seller/SellerAnalytics'
+import PlantCare from '../pages/Dashboard/Customer/PlantCare'
 
 export const router = createBrowserRouter([
   {
@@ -180,6 +183,30 @@ export const router = createBrowserRouter([
           <AdminRoute>
             <ManageCoupons />
           </AdminRoute>
+        ),
+      },
+      {
+        path: 'manage-reviews',
+        element: (
+          <AdminRoute>
+            <ManageReviews />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'seller-analytics',
+        element: (
+          <PrivateRoute>
+            <SellerAnalytics />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'plant-care',
+        element: (
+          <PrivateRoute>
+            <PlantCare />
+          </PrivateRoute>
         ),
       },
     ],
