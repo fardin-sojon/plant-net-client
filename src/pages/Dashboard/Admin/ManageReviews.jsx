@@ -129,7 +129,7 @@ const ManageReviews = () => {
 
               <div className='flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-700'>
                 <span className='text-xs font-semibold px-2.5 py-1 rounded-full bg-lime-50 dark:bg-lime-950/30 text-lime-600 dark:text-lime-400'>
-                  Plant ID: {review.plantId?.substring(0, 8)}...
+                  Plant: {review.plantName || `ID: ${review.plantId?.substring(0, 8)}...`}
                 </span>
                 <button
                   onClick={() => handleDelete(review._id)}
