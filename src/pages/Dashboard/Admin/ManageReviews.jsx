@@ -11,7 +11,7 @@ const ManageReviews = () => {
   const [searchTerm, setSearchTerm] = useState('')
 
   // Fetch all reviews
-  const { data: reviews = [], isLoading } = useQuery({
+  const { data: reviews = [], isLoading, error, isError } = useQuery({
     queryKey: ['all-reviews'],
     queryFn: async () => {
       const { data } = await axiosSecure('/all-reviews')
@@ -50,6 +50,13 @@ const ManageReviews = () => {
   })
 
   if (isLoading) return <LoadingSpinner />
+  if (isError) {
+    return (
+      <div className='container mx-auto px-4 py-8 text-center text-rose-500 font-bold'>
+        Error loading reviews: {error?.response?.data?.message || error.message}
+      </div>
+    )
+  }
 
   return (
     <div className='container mx-auto px-4 py-8'>
