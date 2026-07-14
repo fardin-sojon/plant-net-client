@@ -24,7 +24,25 @@ const MyOrders = () => {
     },
   });
 
-  // console.log(orders);
+  // Group orders by transactionId
+  const groupedOrders = [];
+  const groups = {};
+  orders.forEach(order => {
+    const txId = order.transactionId || 'no-transaction';
+    if (!groups[txId]) {
+      groups[txId] = {
+        transactionId: txId,
+        createdAt: order.createdAt,
+        customerName: order.customerName,
+        customer: order.customer,
+        address: order.address,
+        phone: order.phone,
+        items: []
+      };
+      groupedOrders.push(groups[txId]);
+    }
+    groups[txId].items.push(order);
+  });
   
   const handleDelete = async (id) => {
     try {
@@ -33,7 +51,7 @@ const MyOrders = () => {
       toast.success("Order canceled successfully");
     } catch (err) {
       // console.log(err);
-      toast.error(err.response.data.message);
+      toast.error(err.response.data.message || "Failed to cancel order");
     }
   };
 
@@ -94,10 +112,10 @@ const MyOrders = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order) => (
+                  {groupedOrders.map((groupedOrder) => (
                     <CustomerOrderDataRow
-                      key={order._id}
-                      order={order}
+                      key={groupedOrder.transactionId}
+                      order={groupedOrder}
                       handleDelete={handleDelete}
                     />
                   ))}
@@ -106,10 +124,10 @@ const MyOrders = () => {
 
               {/* Mobile View: Cards */}
               <div className='md:hidden flex flex-col gap-4 p-4 bg-gray-50 dark:bg-gray-900'>
-                  {orders.map(order => (
+                  {groupedOrders.map(groupedOrder => (
                       <CustomerOrderCard
-                        key={order._id}
-                        order={order}
+                        key={groupedOrder.transactionId}
+                        order={groupedOrder}
                         handleDelete={handleDelete}
                       />
                   ))}

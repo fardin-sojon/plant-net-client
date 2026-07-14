@@ -83,7 +83,6 @@ const Sidebar = () => {
                 <>
                   <AdminMenu />
                   <SellerMenu />
-                  <CustomerMenu />
                 </>
               )}
             </nav>

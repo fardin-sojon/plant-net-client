@@ -30,6 +30,26 @@ const ManageOrders = () => {
     enabled: !!user && !!role, // Wait for user and role to be ready
   });
 
+  // Group orders by transactionId
+  const groupedOrders = [];
+  const groups = {};
+  orders.forEach(order => {
+    const txId = order.transactionId || 'no-transaction';
+    if (!groups[txId]) {
+      groups[txId] = {
+        transactionId: txId,
+        createdAt: order.createdAt,
+        customerName: order.customerName,
+        customer: order.customer,
+        address: order.address,
+        phone: order.phone,
+        items: []
+      };
+      groupedOrders.push(groups[txId]);
+    }
+    groups[txId].items.push(order);
+  });
+
   const handleDelete = async (id) => {
     try {
       await axiosSecure.delete(`/orders/${id}`);
@@ -37,14 +57,18 @@ const ManageOrders = () => {
       toast.success("Order canceled successfully");
     } catch (err) {
       // console.log(err);
-      toast.error(err.response.data.message);
+      toast.error(err.response.data.message || "Failed to cancel order");
     }
   };
 
   const handleStatusChange = async (id, status) => {
-    // Optimistic Update: Update UI immediately
+    // Optimistic Update: Update UI immediately for all items in the transaction
     queryClient.setQueryData(["orders", user?.email || user?.providerData[0]?.email], (oldOrders) => {
-      return oldOrders.map(order => order._id === id ? { ...order, status } : order)
+      if (!oldOrders) return oldOrders;
+      const targetOrder = oldOrders.find(o => o._id === id);
+      const txId = targetOrder?.transactionId;
+      if (!txId) return oldOrders;
+      return oldOrders.map(order => order.transactionId === txId ? { ...order, status } : order)
     })
 
     try {
@@ -52,8 +76,7 @@ const ManageOrders = () => {
         toast.success("Status Updated")
     } catch (err) {
         // console.log(err)
-        toast.error(err.response.data.message)
-        // Revert on error (optional but good practice, keeping simple for now or refetch)
+        toast.error(err.response.data.message || "Failed to update status")
         refetch()
     }
   }
@@ -123,10 +146,10 @@ const ManageOrders = () => {
                 </thead>
                 <tbody>
                   {
-                    orders.map(order => (
+                    groupedOrders.map(groupedOrder => (
                       <SellerOrderDataRow
-                        key={order._id}
-                        order={order}
+                        key={groupedOrder.transactionId}
+                        order={groupedOrder}
                         handleDelete={handleDelete}
                         handleStatusChange={handleStatusChange}
                       />
@@ -137,10 +160,10 @@ const ManageOrders = () => {
 
               {/* Mobile View: Cards */}
               <div className='md:hidden flex flex-col gap-4 p-4 bg-gray-50 dark:bg-gray-900'>
-                  {orders.map(order => (
+                  {groupedOrders.map(groupedOrder => (
                       <SellerOrderCard
-                        key={order._id}
-                        order={order}
+                        key={groupedOrder.transactionId}
+                        order={groupedOrder}
                         handleDelete={handleDelete}
                         handleStatusChange={handleStatusChange}
                       />

@@ -2,12 +2,14 @@ import { FaUserAlt, FaDollarSign } from 'react-icons/fa'
 import { BsFillCartPlusFill, BsFillHouseDoorFill } from 'react-icons/bs'
 import { useQuery } from '@tanstack/react-query'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import useAuth from '../../../hooks/useAuth'
 import LoadingSpinner from '../../Shared/LoadingSpinner'
 import { useState } from 'react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 
 const AdminStatistics = () => {
   const axiosSecure = useAxiosSecure()
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState('revenue')
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
@@ -61,6 +63,9 @@ const AdminStatistics = () => {
 
   return (
     <div>
+      <h1 className='text-3xl font-bold text-gray-800 dark:text-white mb-6'>
+        Welcome to Admin Dashboard, {user?.displayName || 'Admin'}!
+      </h1>
       <div className='mt-12'>
         {/* small cards */}
         <div className='mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grow'>
