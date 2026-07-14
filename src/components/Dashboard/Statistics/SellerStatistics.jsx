@@ -178,6 +178,105 @@ const SellerStatistics = () => {
             </div>
           </div>
         </div>
+
+        {/* Recent Orders and Stock Alerts Grid */}
+        <div className='grid grid-cols-1 gap-6 lg:grid-cols-3 mt-8'>
+          {/* Recent Orders Table (2/3 width) */}
+          <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 border border-gray-100 dark:border-gray-700 lg:col-span-2'>
+            <div className='flex items-center justify-between mb-6'>
+              <h3 className='text-lg font-bold text-gray-800 dark:text-white'>Recent Orders Received</h3>
+              <span className='text-xs bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 font-semibold px-2.5 py-1 rounded-full'>
+                Latest {orders.slice(0, 5).length}
+              </span>
+            </div>
+
+            <div className='overflow-x-auto rounded-xl'>
+              <table className='table w-full text-left border-collapse'>
+                <thead>
+                  <tr className='bg-gray-50 dark:bg-gray-900 border-b border-gray-150 dark:border-gray-750 text-gray-600 dark:text-gray-400 text-xs font-bold uppercase'>
+                    <th className='py-3 px-4'>Plant</th>
+                    <th className='py-3 px-4'>Qty</th>
+                    <th className='py-3 px-4'>Total</th>
+                    <th className='py-3 px-4'>Status</th>
+                  </tr>
+                </thead>
+                <tbody className='divide-y divide-gray-100 dark:divide-gray-800 text-sm'>
+                  {orders.slice(0, 5).length === 0 ? (
+                    <tr>
+                      <td colSpan='4' className='py-8 text-center text-gray-500 dark:text-gray-400 italic'>
+                        No orders received yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    orders.slice(0, 5).map((order) => (
+                      <tr key={order._id} className='hover:bg-gray-50/50 dark:hover:bg-gray-900/30 text-gray-750 dark:text-gray-300'>
+                        <td className='py-3 px-4 font-semibold flex items-center gap-2'>
+                          <img
+                            src={order.image}
+                            alt={order.name}
+                            className='w-7 h-7 rounded object-cover'
+                          />
+                          <span>{order.name}</span>
+                        </td>
+                        <td className='py-3 px-4'>{order.quantity}</td>
+                        <td className='py-3 px-4 font-bold text-lime-600 dark:text-lime-400'>
+                          ${(order.price * order.quantity).toFixed(2)}
+                        </td>
+                        <td className='py-3 px-4'>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                            order.status === 'Delivered'
+                              ? 'bg-lime-100 text-lime-700'
+                              : order.status === 'In Progress'
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-amber-100 text-amber-700'
+                          }`}>
+                            {order.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Low Stock Alerts (1/3 width) */}
+          <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 border border-gray-100 dark:border-gray-700 flex flex-col justify-between'>
+            <div>
+              <h3 className='text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2'>
+                ⚠️ Low Stock Alert
+              </h3>
+              <div className='flex flex-col gap-3 overflow-y-auto max-h-60'>
+                {plants.filter(plant => parseInt(plant.quantity || 0) < 5).length === 0 ? (
+                  <p className='text-sm text-gray-400 italic'>All plants have healthy stock levels!</p>
+                ) : (
+                  plants.filter(plant => parseInt(plant.quantity || 0) < 5).map((plant) => (
+                    <div key={plant._id} className='flex items-center justify-between p-3 rounded-xl bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/50'>
+                      <div className='flex items-center gap-2'>
+                        <img
+                          src={plant.image}
+                          alt={plant.name}
+                          className='w-8 h-8 rounded object-cover border border-rose-200'
+                        />
+                        <span className='font-semibold text-sm text-gray-800 dark:text-gray-200'>
+                          {plant.name?.substring(0, 15)}
+                        </span>
+                      </div>
+                      <span className='text-xs font-bold bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 px-2 py-1 rounded-full'>
+                        {plant.quantity} Left
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+            
+            <div className='text-xs text-gray-400 mt-4 border-t border-gray-100 dark:border-gray-700 pt-3'>
+              Update stock quantity in the "My Inventory" section to resolve alerts.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

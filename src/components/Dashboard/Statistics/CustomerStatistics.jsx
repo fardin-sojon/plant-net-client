@@ -159,6 +159,69 @@ const CustomerStatistics = () => {
             </div>
           </div>
         </div>
+
+        {/* Recent Purchases Tracker */}
+        <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mt-8 border border-gray-100 dark:border-gray-700'>
+          <div className='flex items-center justify-between mb-6'>
+            <div>
+              <h3 className='text-lg font-bold text-gray-800 dark:text-white'>Recent Purchases</h3>
+              <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>Track status and delivery details of your green friends</p>
+            </div>
+            <span className='text-xs bg-lime-100 dark:bg-lime-950/30 text-lime-700 dark:text-lime-400 font-semibold px-3 py-1 rounded-full'>
+              Order Status
+            </span>
+          </div>
+
+          <div className='overflow-x-auto rounded-xl'>
+            <table className='table w-full text-left border-collapse'>
+              <thead>
+                <tr className='bg-gray-50 dark:bg-gray-900 border-b border-gray-150 dark:border-gray-750 text-gray-600 dark:text-gray-400 text-xs font-bold uppercase'>
+                  <th className='py-3 px-4'>Plant</th>
+                  <th className='py-3 px-4'>Quantity</th>
+                  <th className='py-3 px-4'>Price Paid</th>
+                  <th className='py-3 px-4'>Shipment Status</th>
+                </tr>
+              </thead>
+              <tbody className='divide-y divide-gray-100 dark:divide-gray-800 text-sm'>
+                {orders.slice(0, 4).length === 0 ? (
+                  <tr>
+                    <td colSpan='4' className='py-8 text-center text-gray-500 dark:text-gray-400 italic'>
+                      No orders placed yet.
+                    </td>
+                  </tr>
+                ) : (
+                  orders.slice(0, 4).map((order) => (
+                    <tr key={order._id} className='hover:bg-gray-50/50 dark:hover:bg-gray-900/30 text-gray-750 dark:text-gray-300'>
+                      <td className='py-3 px-4 flex items-center gap-3 font-semibold'>
+                        <img
+                          src={order.image || 'https://i.ibb.co.com/CFxm3Oy/placeholder.jpg'}
+                          alt={order.name}
+                          className='w-8 h-8 rounded-lg object-cover'
+                        />
+                        <span>{order.name}</span>
+                      </td>
+                      <td className='py-3 px-4'>{order.quantity}</td>
+                      <td className='py-3 px-4 font-bold text-lime-600 dark:text-lime-400'>
+                        ${(order.price * order.quantity).toFixed(2)}
+                      </td>
+                      <td className='py-3 px-4'>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          order.status === 'Delivered'
+                            ? 'bg-lime-50 dark:bg-lime-950/20 text-lime-600 dark:text-lime-400'
+                            : order.status === 'In Progress'
+                            ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400'
+                            : 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400'
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   )
