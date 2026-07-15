@@ -10,12 +10,14 @@ import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 import { IoArrowBack } from "react-icons/io5";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useCart from "../../hooks/useCart";
 import toast from "react-hot-toast";
 import { FaHeart, FaRegHeart, FaStar, FaSun, FaTint, FaSeedling } from "react-icons/fa";
 
 const PlantDetails = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const { addToCart } = useCart();
   let [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -28,6 +30,7 @@ const PlantDetails = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [ratingState, setRatingState] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
+  const [buyQuantity, setBuyQuantity] = useState(1);
 
   const {
     data: plant = {},
@@ -82,6 +85,29 @@ const PlantDetails = () => {
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const handleQuantityIncrease = () => {
+    if (buyQuantity < quantity) {
+      setBuyQuantity(buyQuantity + 1);
+    } else {
+      toast.error("Cannot exceed available stock quantity!");
+    }
+  };
+
+  const handleQuantityDecrease = () => {
+    if (buyQuantity > 1) {
+      setBuyQuantity(buyQuantity - 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (quantity <= 0) {
+      toast.error("This plant is out of stock!");
+      return;
+    }
+    addToCart(plant, buyQuantity);
+    toast.success(`Added ${buyQuantity} units to Cart!`);
   };
 
   const handleMouseMove = (e) => {
@@ -294,7 +320,33 @@ const PlantDetails = () => {
             </div>
           </div>
 
-          <div className="flex gap-4">
+          {/* Quantity Selector */}
+          {quantity > 0 && (
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Select Quantity:</span>
+              <div className="flex items-center border border-base-300 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-xs">
+                <button
+                  type="button"
+                  onClick={handleQuantityDecrease}
+                  className="px-4 py-2 hover:bg-base-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold transition select-none cursor-pointer"
+                >
+                  -
+                </button>
+                <span className="px-4 py-2 font-extrabold text-sm text-gray-800 dark:text-white select-none min-w-[48px] text-center">
+                  {buyQuantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleQuantityIncrease}
+                  className="px-4 py-2 hover:bg-base-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold transition select-none cursor-pointer"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-4">
             <Button
               disabled={quantity <= 0}
               onClick={() => {
@@ -310,12 +362,19 @@ const PlantDetails = () => {
                   : "Purchase Now"
               }
             />
-            <button onClick={haldleBack} className="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition cursor-pointer flex items-center gap-2">
+            <button
+              disabled={quantity <= 0}
+              onClick={handleAddToCart}
+              className="px-6 py-3 bg-lime-500 hover:bg-lime-600 disabled:bg-gray-200 dark:disabled:bg-gray-700 text-white font-extrabold rounded-xl transition cursor-pointer flex items-center gap-2 shadow-xs disabled:cursor-not-allowed select-none"
+            >
+              Add to Cart
+            </button>
+            <button onClick={haldleBack} className="px-5 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition cursor-pointer flex items-center gap-2">
               <IoArrowBack /> Back
             </button>
           </div>
 
-          <PurchaseModal plant={plant} closeModal={closeModal} isOpen={isOpen} />
+          <PurchaseModal plant={plant} closeModal={closeModal} isOpen={isOpen} buyQuantity={buyQuantity} />
         </div>
       </div>
 

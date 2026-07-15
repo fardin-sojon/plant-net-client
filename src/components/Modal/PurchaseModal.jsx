@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 
-const PurchaseModal = ({ closeModal, isOpen, plant }) => {
+const PurchaseModal = ({ closeModal, isOpen, plant, buyQuantity = 1 }) => {
   const {user} = useAuth()
   const axiosSecure = useAxiosSecure()
   const {_id, name, category, quantity, price, description, image, seller } = plant
@@ -55,7 +55,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
     try {
       const { data } = await axiosSecure.post('/coupons/apply', {
         code: couponCode.trim(),
-        cartTotal: price
+        cartTotal: price * buyQuantity
       })
       setDiscount(data.discount)
       setAppliedCoupon(couponCode.trim().toUpperCase())
@@ -103,7 +103,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
           category, 
           price, 
           description,
-          quantity: 1,
+          quantity: buyQuantity,
           image,
           seller
         }],
@@ -160,16 +160,17 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
             </div>
 
             <div className="mt-2 flex justify-between items-center text-sm font-semibold">
-              <p className="text-gray-500 dark:text-gray-300">Price: ${price}</p>
+              <p className="text-gray-500 dark:text-gray-300">Quantity: {buyQuantity}</p>
+            </div>
+            <div className="mt-2 flex justify-between items-center text-sm font-semibold">
+              <p className="text-gray-500 dark:text-gray-300">Price: ${price} x {buyQuantity} = ${price * buyQuantity}</p>
               {discount > 0 && (
                 <p className="text-lime-600 dark:text-lime-400">Discount: -${discount.toFixed(2)}</p>
               )}
             </div>
-            {discount > 0 && (
-              <div className="mt-2 text-right text-sm font-bold text-gray-800 dark:text-white border-t border-dashed dark:border-gray-700 pt-2">
-                Total Price: ${(price - discount).toFixed(2)}
-              </div>
-            )}
+            <div className="mt-2 text-right text-sm font-bold text-gray-800 dark:text-white border-t border-dashed dark:border-gray-700 pt-2">
+              Total Price: ${(price * buyQuantity - discount).toFixed(2)}
+            </div>
 
             {/* Coupon Code Section */}
             <div className="mt-4 border-t border-gray-100 dark:border-gray-700 pt-4">

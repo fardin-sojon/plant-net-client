@@ -19,17 +19,17 @@ const CartProvider = ({ children }) => {
     localStorage.setItem('plantNet-cart', JSON.stringify(cart))
   }, [cart])
 
-  const addToCart = (plant) => {
+  const addToCart = (plant, customQuantity = 1) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item._id === plant._id)
       if (existingItem) {
         return prevCart.map((item) =>
           item._id === plant._id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + customQuantity }
             : item
         )
       } else {
-        return [...prevCart, { ...plant, quantity: 1 }]
+        return [...prevCart, { ...plant, quantity: customQuantity }]
       }
     })
   }
