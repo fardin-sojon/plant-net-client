@@ -8,12 +8,14 @@ import useCart from '../../../hooks/useCart'
 import avatarImg from '../../../assets/images/placeholder.jpg'
 import logo from '../../../assets/images/logo-flat.png'
 import { ThemeContext } from '../../../providers/ThemeProvider'
+import DownloadModal from '../../Modal/DownloadModal'
 
 const Navbar = () => {
   const { user, logOut } = useAuth()
   const { cart } = useCart()
   const { theme, toggleTheme } = useContext(ThemeContext)
   const [isOpen, setIsOpen] = useState(false)
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false)
   const dropdownRef = useRef(null)
 
   useEffect(() => {
@@ -52,13 +54,12 @@ const Navbar = () => {
               <NavLink to='/contact' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
                 Contact Us
               </NavLink>
-              <a
-                href={import.meta.env.VITE_APK_URL || '/plantnet.apk'}
-                download='plantnet.apk'
-                className='font-semibold text-sm transition hover:text-lime-500 text-gray-700 dark:text-gray-300'
+              <button
+                onClick={() => setIsDownloadModalOpen(true)}
+                className='font-semibold text-sm transition hover:text-lime-500 text-gray-700 dark:text-gray-300 cursor-pointer'
               >
                 Download
-              </a>
+              </button>
             </div>
 
             {/* Dropdown Menu */}
@@ -228,14 +229,15 @@ const Navbar = () => {
                       <Link to='/contact' onClick={() => setIsOpen(false)} className='dd-item'>
                         Contact Us
                       </Link>
-                      <a
-                        href={import.meta.env.VITE_APK_URL || '/plantnet.apk'}
-                        download='plantnet.apk'
-                        onClick={() => setIsOpen(false)}
+                      <button
+                        onClick={() => {
+                          setIsOpen(false)
+                          setIsDownloadModalOpen(true)
+                        }}
                         className='dd-item'
                       >
                         Download
-                      </a>
+                      </button>
                       <div className='dd-divider' />
                     </div>
 
@@ -273,6 +275,7 @@ const Navbar = () => {
           </div>
         </Container>
       </div>
+      <DownloadModal isOpen={isDownloadModalOpen} setIsOpen={setIsDownloadModalOpen} />
     </div>
   )
 }
