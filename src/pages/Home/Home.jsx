@@ -4,6 +4,7 @@ import About from '../../components/Home/About'
 import Reviews from '../../components/Home/Reviews/Reviews'
 import FAQ from '../../components/Home/FAQ'
 import Newsletter from '../../components/Home/Newsletter'
+import CouponsOffers from '../../components/Home/CouponsOffers'
 
 const Home = () => {
   const reviewsPromise = fetch('/reviews.json').then(res => res.json())
@@ -11,6 +12,7 @@ const Home = () => {
   return (
     <div>
       <Banner />
+      <CouponsOffers />
       <Plants limit={10} />
       <About />
       <Reviews reviewsPromise={reviewsPromise} />
