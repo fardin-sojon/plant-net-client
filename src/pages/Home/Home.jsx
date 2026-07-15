@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <div>
       <Banner />
-      <CouponsOffers />
       <Plants limit={10} />
+      <CouponsOffers />
       <About />
       <Reviews reviewsPromise={reviewsPromise} />
       <FAQ />

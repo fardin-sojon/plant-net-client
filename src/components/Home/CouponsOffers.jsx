@@ -65,10 +65,10 @@ const CouponsOffers = () => {
                   </div>
                   <div>
                     <h3 className='font-black text-2xl text-lime-600 dark:text-lime-400'>
-                      {coupon.type === 'percent' ? `${coupon.discount}% OFF` : `$${coupon.discount} OFF`}
+                      {coupon.discountType === 'percent' ? `${coupon.discountAmount}% OFF` : `$${coupon.discountAmount} OFF`}
                     </h3>
                     <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5 uppercase tracking-wider font-bold'>
-                      {coupon.type === 'percent' ? 'Percentage Discount' : 'Fixed Flat discount'}
+                      {coupon.discountType === 'percent' ? 'Percentage Discount' : 'Fixed Flat discount'}
                     </p>
                   </div>
                 </div>
