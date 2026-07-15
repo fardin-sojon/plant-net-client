@@ -52,6 +52,13 @@ const Navbar = () => {
               <NavLink to='/contact' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
                 Contact Us
               </NavLink>
+              <a
+                href={import.meta.env.VITE_APK_URL || '/plantnet.apk'}
+                download='plantnet.apk'
+                className='font-semibold text-sm transition hover:text-lime-500 text-gray-700 dark:text-gray-300'
+              >
+                Download
+              </a>
             </div>
 
             {/* Dropdown Menu */}
@@ -221,6 +228,14 @@ const Navbar = () => {
                       <Link to='/contact' onClick={() => setIsOpen(false)} className='dd-item'>
                         Contact Us
                       </Link>
+                      <a
+                        href={import.meta.env.VITE_APK_URL || '/plantnet.apk'}
+                        download='plantnet.apk'
+                        onClick={() => setIsOpen(false)}
+                        className='dd-item'
+                      >
+                        Download
+                      </a>
                       <div className='dd-divider' />
                     </div>
 
