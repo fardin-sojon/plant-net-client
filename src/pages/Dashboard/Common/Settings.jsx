@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
 import toast from 'react-hot-toast'
 import { FaUserCog, FaShieldAlt, FaPalette, FaBell, FaInfoCircle, FaMoon, FaSun } from 'react-icons/fa'
+import { FcGoogle } from 'react-icons/fc'
 import UpdateProfileModal from '../../../components/Modal/UpdateProfileModal'
 import ChangePasswordModal from '../../../components/Modal/ChangePasswordModal'
 
@@ -226,8 +227,8 @@ const Settings = () => {
                 </div>
               ) : (
                 <div className='flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700/60'>
-                  <FaInfoCircle className='text-lime-500 shrink-0' />
-                  <p className='text-xs text-gray-500 dark:text-gray-400 italic'>
+                  <FcGoogle className='text-xl shrink-0' />
+                  <p className='text-xs text-gray-500 dark:text-gray-400 font-bold'>
                     Your account is registered using Google OAuth. Password manager options are managed externally.
                   </p>
                 </div>

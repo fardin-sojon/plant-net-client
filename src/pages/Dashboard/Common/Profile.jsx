@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
 import { FaPhone, FaMapMarkerAlt, FaEnvelope, FaCalendarAlt, FaUserCircle, FaShoppingBag, FaHeart, FaWarehouse, FaTicketAlt, FaUsers } from 'react-icons/fa'
+import { FcGoogle } from 'react-icons/fc'
 
 const Profile = () => {
   const { user } = useAuth()
@@ -141,8 +142,9 @@ const Profile = () => {
                 Change Password
               </button>
             ) : (
-              <span className="px-5 py-2.5 text-xs text-gray-500 dark:text-gray-400 italic flex items-center bg-gray-50 dark:bg-gray-900/40 rounded-xl border border-gray-150 dark:border-gray-700/60">
-                Logged in via Google
+              <span className="px-5 py-2.5 text-xs text-gray-500 dark:text-gray-400 font-bold flex items-center gap-2 bg-gray-50 dark:bg-gray-900/40 rounded-xl border border-gray-150 dark:border-gray-700/60 select-none">
+                <FcGoogle className="text-base" />
+                <span>Logged in via Google</span>
               </span>
             )}
           </div>
