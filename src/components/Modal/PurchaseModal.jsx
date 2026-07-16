@@ -5,6 +5,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const PurchaseModal = ({ closeModal, isOpen, plant, buyQuantity = 1 }) => {
   const {user} = useAuth()
