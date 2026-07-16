@@ -101,7 +101,7 @@ const DownloadModal = ({ isOpen, setIsOpen }) => {
                     {/* Requirements */}
                     <div className='flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 px-1.5'>
                       <span>Android 8.0+ Required</span>
-                      <span>File Size: ~15 MB</span>
+                      <span>File Size: ~5.07 MB</span>
                     </div>
 
                     <button
