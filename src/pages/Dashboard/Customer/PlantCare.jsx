@@ -26,15 +26,24 @@ const PlantCare = () => {
     return orders.find((o) => o.name === name)
   })
 
-  // Local state for planner tasks (loaded from localStorage for persistency)
-  const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem(`plant_care_tasks_${userEmail}`)
-    return saved ? JSON.parse(saved) : [
-      { id: '1', plant: 'Monstera Deliciosa', type: 'Watering', day: 'Monday', completed: false },
-      { id: '2', plant: 'Aloe Vera', type: 'Sunlight Exposure', day: 'Wednesday', completed: true },
-      { id: '3', plant: 'Monstera Deliciosa', type: 'Fertilizing', day: 'Friday', completed: false }
-    ]
-  })
+  // Local state for planner tasks
+  const [tasks, setTasks] = useState([])
+
+  // Load tasks from localStorage when userEmail changes
+  useEffect(() => {
+    if (userEmail) {
+      const saved = localStorage.getItem(`plant_care_tasks_${userEmail}`)
+      if (saved) {
+        setTasks(JSON.parse(saved))
+      } else {
+        setTasks([
+          { id: '1', plant: 'Monstera Deliciosa', type: 'Watering', day: 'Monday', completed: false },
+          { id: '2', plant: 'Aloe Vera', type: 'Sunlight Exposure', day: 'Wednesday', completed: true },
+          { id: '3', plant: 'Monstera Deliciosa', type: 'Fertilizing', day: 'Friday', completed: false }
+        ])
+      }
+    }
+  }, [userEmail])
 
   // Save tasks to localStorage when they change
   useEffect(() => {
@@ -111,14 +120,12 @@ const PlantCare = () => {
                 className='px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-lime-500'
               >
                 <option value=''>-- Choose Plant --</option>
+                <option value='My Home Plant'>My Home Plant (General)</option>
                 {purchasedPlants.map((plant) => (
                   <option key={plant._id} value={plant.name}>
                     {plant.name}
                   </option>
                 ))}
-                {purchasedPlants.length === 0 && (
-                  <option value='My Home Plant'>My Home Plant</option>
-                )}
               </select>
             </div>
 
