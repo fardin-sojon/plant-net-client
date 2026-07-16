@@ -7,6 +7,7 @@ import { GrLogout } from 'react-icons/gr'
 import { FcSettings } from 'react-icons/fc'
 import { AiOutlineBars } from 'react-icons/ai'
 import { BsGraphUp } from 'react-icons/bs'
+import { FaUserCircle, FaCog } from 'react-icons/fa'
 
 // User Menu
 import MenuItem from './Menu/MenuItem'
@@ -93,9 +94,14 @@ const Sidebar = () => {
             <hr />
 
             <MenuItem
-              icon={FcSettings}
+              icon={FaUserCircle}
               label='Profile'
               address='/dashboard/profile'
+            />
+            <MenuItem
+              icon={FaCog}
+              label='Settings'
+              address='/dashboard/settings'
             />
             <button
               onClick={logOut}

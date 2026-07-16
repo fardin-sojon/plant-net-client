@@ -32,6 +32,7 @@ import ManageCoupons from '../pages/Dashboard/Admin/ManageCoupons'
 import ManageReviews from '../pages/Dashboard/Admin/ManageReviews'
 import SellerAnalytics from '../pages/Dashboard/Seller/SellerAnalytics'
 import PlantCare from '../pages/Dashboard/Customer/PlantCare'
+import Settings from '../pages/Dashboard/Common/Settings'
 
 export const router = createBrowserRouter([
   {
@@ -150,6 +151,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Profile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'settings',
+        element: (
+          <PrivateRoute>
+            <Settings />
           </PrivateRoute>
         ),
       },
