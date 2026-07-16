@@ -21,6 +21,7 @@ const Cart = () => {
   const [couponCode, setCouponCode] = useState('')
   const [discount, setDiscount] = useState(0)
   const [appliedCoupon, setAppliedCoupon] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('stripe')
 
   const email = user?.email || user?.providerData?.[0]?.email
 
@@ -102,26 +103,47 @@ const Cart = () => {
 
     setLoading(true)
     try {
-      // 1. Send cart items to backend to create order and get payment session
-      const { data } = await axiosSecure.post('/create-checkout-session', {
-        items: cart,
-        couponCode: appliedCoupon || null,
-        customer: {
-            name: user?.displayName,
-            email: user?.email || user?.providerData?.[0]?.email,
-            image: user?.photoURL,
-            recipientName: recipientName.trim(),
-            address: address.trim(),
-            phone: phone.trim()
-        },
-      })
-      
-      // 2. Redirect to Stripe
-      window.location.replace(data.url)
+      if (paymentMethod === 'stripe') {
+        // 1. Send cart items to backend to create order and get payment session
+        const { data } = await axiosSecure.post('/create-checkout-session', {
+          items: cart,
+          couponCode: appliedCoupon || null,
+          customer: {
+              name: user?.displayName,
+              email: user?.email || user?.providerData?.[0]?.email,
+              image: user?.photoURL,
+              recipientName: recipientName.trim(),
+              address: address.trim(),
+              phone: phone.trim()
+          },
+        })
+        
+        // 2. Redirect to Stripe
+        window.location.replace(data.url)
+      } else {
+        // Cash on Delivery
+        const { data } = await axiosSecure.post('/create-cod-order', {
+          items: cart,
+          couponCode: appliedCoupon || null,
+          customer: {
+              name: user?.displayName,
+              email: user?.email || user?.providerData?.[0]?.email,
+              image: user?.photoURL,
+              recipientName: recipientName.trim(),
+              address: address.trim(),
+              phone: phone.trim()
+          },
+        })
 
+        if (data.success) {
+          toast.success('Order placed successfully (Cash on Delivery)!')
+          clearCart()
+          navigate('/dashboard/my-orders')
+        }
+      }
     } catch (err) {
       console.error(err)
-      toast.error('Checkout failed')
+      toast.error(paymentMethod === 'stripe' ? 'Checkout failed' : 'Cash on Delivery order failed: ' + (err.response?.data?.message || err.message))
       setLoading(false)
     }
   }
@@ -290,12 +312,41 @@ const Cart = () => {
                 </div>
               </div>
 
+              {/* Payment Method Selector */}
+              <div className='mb-6 space-y-3 pt-4 border-t dark:border-gray-700'>
+                <h4 className='text-sm font-bold text-gray-700 dark:text-gray-200'>Payment Method</h4>
+                <div className='flex flex-col gap-2'>
+                  <label className='flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300'>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="stripe"
+                      checked={paymentMethod === 'stripe'}
+                      onChange={() => setPaymentMethod('stripe')}
+                      className="radio radio-primary radio-sm focus:ring-0"
+                    />
+                    <span>Online Payment (Stripe)</span>
+                  </label>
+                  <label className='flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300'>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cod"
+                      checked={paymentMethod === 'cod'}
+                      onChange={() => setPaymentMethod('cod')}
+                      className="radio radio-primary radio-sm focus:ring-0"
+                    />
+                    <span>Cash on Delivery (COD)</span>
+                  </label>
+                </div>
+              </div>
+
               <button
                 onClick={handleCheckout}
                 disabled={!recipientName.trim() || !address.trim() || !phone.trim()}
-                className='w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-500 text-white font-bold py-3 rounded-xl transition duration-300 disabled:cursor-not-allowed'
+                className='w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-500 text-white font-bold py-3 rounded-xl transition duration-300 disabled:cursor-not-allowed cursor-pointer'
               >
-                Proceed to Checkout
+                {paymentMethod === 'stripe' ? 'Proceed to Online Payment' : 'Place Cash on Delivery Order'}
               </button>
             </div>
           </div>

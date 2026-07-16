@@ -17,6 +17,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant, buyQuantity = 1 }) => {
   const [couponCode, setCouponCode] = useState('')
   const [discount, setDiscount] = useState(0)
   const [appliedCoupon, setAppliedCoupon] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('stripe')
 
   const email = user?.email || user?.providerData?.[0]?.email
 
@@ -130,6 +131,62 @@ const PurchaseModal = ({ closeModal, isOpen, plant, buyQuantity = 1 }) => {
     }
   }
 
+  const handleCOD = async () => {
+    if (!user) {
+      toast.error('Please log in first!')
+      navigate('/login')
+      return
+    }
+
+    if (quantity <= 0) {
+      toast.error('This plant is out of stock!')
+      return
+    }
+
+    if (!recipientName.trim() || !address.trim() || !phone.trim()) {
+      toast.error('Please fill in name, address and phone number!')
+      return
+    }
+
+    const loadingToast = toast.loading('Placing Cash on Delivery order...')
+    try {
+      const paymentData = {
+        items: [{
+          _id: _id,
+          plantId: _id,
+          name, 
+          category, 
+          price, 
+          description,
+          quantity: buyQuantity,
+          image,
+          seller
+        }],
+        couponCode: appliedCoupon || null,
+        customer: {
+          name: user?.displayName,
+          email: user?.email || user?.providerData?.[0]?.email,
+          image: user?.photoURL,
+          recipientName: recipientName.trim(),
+          address: address.trim(),
+          phone: phone.trim()
+        }
+      }
+
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/create-cod-order`, paymentData)
+      toast.dismiss(loadingToast)
+      if (data.success) {
+        toast.success('Order placed successfully (Cash on Delivery)!')
+        closeModal()
+        navigate('/dashboard/my-orders')
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast)
+      console.error('COD error:', error)
+      toast.error('Order failed: ' + (error.response?.data?.message || error.message || 'Unknown error'))
+    }
+  }
+
   return (
     <Dialog
       open={isOpen}
@@ -214,6 +271,37 @@ const PurchaseModal = ({ closeModal, isOpen, plant, buyQuantity = 1 }) => {
                 </p>
               )}
             </div>
+
+            {/* Payment Method Selector */}
+            <div className="mt-4 border-t border-gray-150 dark:border-gray-700 pt-4">
+              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">
+                Payment Method
+              </label>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="stripe"
+                    checked={paymentMethod === 'stripe'}
+                    onChange={() => setPaymentMethod('stripe')}
+                    className="radio radio-primary radio-xs"
+                  />
+                  <span>Online Payment (Stripe)</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod')}
+                    className="radio radio-primary radio-xs"
+                  />
+                  <span>Cash on Delivery (COD)</span>
+                </label>
+              </div>
+            </div>
             
             {/* Address & Phone Inputs */}
             <div className="mt-4 space-y-3 pt-4 border-t border-gray-100 dark:border-gray-700">
@@ -260,12 +348,12 @@ const PurchaseModal = ({ closeModal, isOpen, plant, buyQuantity = 1 }) => {
 
             <div className="flex mt-6 justify-around">
               <button
-                onClick={handlePayment}
+                onClick={paymentMethod === 'stripe' ? handlePayment : handleCOD}
                 disabled={!recipientName.trim() || !address.trim() || !phone.trim()}
                 type="button"
                 className="cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 disabled:bg-gray-100 disabled:text-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-500 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
-                Pay
+                {paymentMethod === 'stripe' ? 'Pay Online' : 'Place COD Order'}
               </button>
               <button
                 type="button"
