@@ -7,7 +7,7 @@ import ChangePasswordModal from '../../../components/Modal/ChangePasswordModal'
 import { useQuery } from '@tanstack/react-query'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
-import { FaPhone, FaMapMarkerAlt, FaEnvelope, FaCalendarAlt, FaUserCircle, FaShoppingBag, FaHeart, FaWarehouse, FaTicketAlt, FaUsers } from 'react-icons/fa'
+import { FaPhone, FaMapMarkerAlt, FaEnvelope, FaCalendarAlt, FaUserCircle, FaShoppingBag, FaHeart, FaWarehouse, FaTicketAlt, FaUsers, FaReceipt, FaCheckCircle } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 
 const Profile = () => {
@@ -274,6 +274,47 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* Seller Application Payment Receipt Card */}
+      {dbUser?.status === 'Requested' && (
+        <div className="mt-8 bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100/50 dark:from-emerald-950/40 dark:to-teal-950/40 p-6 rounded-3xl border border-emerald-200 dark:border-emerald-800/40 shadow-sm">
+          <div className="flex items-center justify-between border-b border-emerald-200/60 dark:border-emerald-800/40 pb-4 mb-4 flex-wrap gap-2">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-500 text-white rounded-2xl shadow-xs text-xl">
+                <FaReceipt />
+              </div>
+              <div>
+                <h3 className="text-lg font-extrabold text-gray-900 dark:text-white">Seller Registration Payment Proof 💳</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Application Status: Pending Admin Approval ⏳</p>
+              </div>
+            </div>
+            <span className="px-3.5 py-1 bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-bold text-xs rounded-full border border-amber-200 dark:border-amber-900/40">
+              Application Under Review
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div className="bg-white/80 dark:bg-gray-800/80 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+              <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Registration Fee Paid</span>
+              <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1">$29.00 USD</p>
+            </div>
+
+            <div className="bg-white/80 dark:bg-gray-800/80 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+              <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Transaction ID</span>
+              <p className="text-sm font-mono font-extrabold text-gray-800 dark:text-white mt-1 break-all">
+                {dbUser?.transactionId || 'TXN-SEL-ONLINE'}
+              </p>
+            </div>
+
+            <div className="bg-white/80 dark:bg-gray-800/80 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+              <span className="font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Payment Status</span>
+              <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1.5">
+                <FaCheckCircle /> Confirmed & Verified
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <UpdateProfileModal
         isOpen={isEditModalOpen}

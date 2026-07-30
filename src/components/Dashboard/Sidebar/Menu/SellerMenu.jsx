@@ -1,6 +1,8 @@
 import { BsFillHouseAddFill } from 'react-icons/bs'
 import { MdHomeWork, MdOutlineManageHistory, MdQueryStats } from 'react-icons/md'
+import { FaImages } from 'react-icons/fa'
 import MenuItem from './MenuItem'
+
 const SellerMenu = () => {
   return (
     <>

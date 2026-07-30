@@ -6,6 +6,7 @@ import LoadingSpinner from '../components/Shared/LoadingSpinner'
 const DashboardLayout = () => {
   const location = useLocation()
   const [loading, setLoading] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -19,9 +20,10 @@ const DashboardLayout = () => {
   return (
     <div className='relative min-h-screen md:flex bg-white dark:bg-gray-900 dark:text-white'>
       {/* Left Side: Sidebar Component */}
-      <Sidebar />
+      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+
       {/* Right Side: Dashboard Dynamic Content */}
-      <div className='flex-1  md:ml-64'>
+      <div className={`flex-1 transition-all duration-300 ${isCollapsed ? 'md:ml-20' : 'md:ml-64'}`}>
         <div className='p-5'>
           {/* Outlet for dynamic contents */}
           {loading ? (

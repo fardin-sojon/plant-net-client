@@ -34,28 +34,35 @@ const SellerAnalytics = () => {
 
   // Calculations
   const deliveredOrders = orders.filter(o => o.status === 'Delivered')
-  const pendingOrders = orders.filter(o => o.status === 'Pending')
+  const shippedOrders = orders.filter(o => o.status === 'Shipped')
   const inProgressOrders = orders.filter(o => o.status === 'In Progress')
+  const pendingOrders = orders.filter(o => o.status === 'Pending')
 
-  const totalEarnings = deliveredOrders.reduce((sum, o) => sum + (o.price * o.quantity), 0)
-  const pendingEarnings = [...pendingOrders, ...inProgressOrders].reduce((sum, o) => sum + (o.price * o.quantity), 0)
-  const totalItemsSold = deliveredOrders.reduce((sum, o) => sum + o.quantity, 0)
-  const totalStock = plants.reduce((sum, p) => sum + parseInt(p.quantity || 0), 0)
+  const totalEarnings = deliveredOrders.reduce((sum, o) => Number(sum) + (Number(o.price || 0) * Number(o.quantity || 0)), 0)
+  const pendingEarnings = [...pendingOrders, ...inProgressOrders, ...shippedOrders].reduce((sum, o) => Number(sum) + (Number(o.price || 0) * Number(o.quantity || 0)), 0)
+  const totalItemsSold = deliveredOrders.reduce((sum, o) => Number(sum) + Number(o.quantity || 0), 0)
+  const totalStock = plants.reduce((sum, p) => Number(sum) + Number(p.quantity || 0), 0)
 
-  // Chart Data: Status breakdown for Pie Chart
+  // Chart Data: 4-Status breakdown for Pie Chart
   const statusData = [
     { name: 'Delivered', value: deliveredOrders.length, color: '#84cc16' },
+    { name: 'Shipped', value: shippedOrders.length, color: '#06b6d4' },
     { name: 'In Progress', value: inProgressOrders.length, color: '#3b82f6' },
     { name: 'Pending', value: pendingOrders.length, color: '#eab308' },
   ].filter(d => d.value > 0)
 
-  // Chart Data: Top 5 plants by earnings / stock
+  // Chart Data: Top 5 plants by stock & real units sold
   const topPlantsData = plants
-    .map(p => ({
-      name: p.name?.substring(0, 12) + (p.name?.length > 12 ? '..' : ''),
-      Stock: p.quantity,
-      Price: p.price,
-    }))
+    .map(p => {
+      const soldUnits = orders
+        .filter(o => o.status === 'Delivered' && (String(o.plantId) === String(p._id) || o.name === p.name))
+        .reduce((sum, o) => Number(sum) + Number(o.quantity || 0), 0)
+      return {
+        name: p.name?.substring(0, 12) + (p.name?.length > 12 ? '..' : ''),
+        Stock: Number(p.quantity || 0),
+        'Units Sold': Number(soldUnits),
+      }
+    })
     .slice(0, 5)
 
   return (
@@ -141,7 +148,7 @@ const SellerAnalytics = () => {
                   <Tooltip />
                   <Legend />
                   <Bar dataKey='Stock' fill='#84cc16' radius={[4, 4, 0, 0]} />
-                  <Bar dataKey='Price' fill='#3b82f6' radius={[4, 4, 0, 0]} />
+                  <Bar dataKey='Units Sold' fill='#3b82f6' radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}

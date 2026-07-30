@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { MdPayment } from 'react-icons/md'
+import { FaTruck } from 'react-icons/fa'
 import DeleteModal from '../../Modal/DeleteModal'
 import PaymentDetailsModal from '../../Modal/PaymentDetailsModal'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
@@ -10,14 +12,16 @@ const CustomerOrderCard = ({ order, handleDelete }) => {
   let [payment, setPayment] = useState(null)
   let [loadingPayment, setLoadingPayment] = useState(false)
   const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate()
   const closeModal = () => setIsOpen(false)
   const closePaymentModal = () => {
     setIsPaymentModalOpen(false)
     setPayment(null)
   }
 
-  const { transactionId, items } = order || {}
+  const { orderId, transactionId, items } = order || {}
   const firstItem = items?.[0] || {}
+  const displayId = orderId || firstItem.orderId || transactionId || 'PN-ORD-N/A'
   const totalAmount = items?.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const canCancel = items?.every(item => item.status !== 'Delivered' && item.status !== 'In Progress')
 
@@ -40,7 +44,7 @@ const CustomerOrderCard = ({ order, handleDelete }) => {
     <div className='bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700 space-y-4'>
       {/* Transaction ID & Date Header */}
       <div className='flex justify-between items-center text-xs font-semibold text-gray-500 dark:text-gray-400 border-b pb-2 border-gray-100 dark:border-gray-700'>
-        <span>Order: #{transactionId?.slice(-8)}</span>
+        <span>Order: {displayId}</span>
         <span>{items?.[0]?.createdAt && new Date(items[0].createdAt).toLocaleDateString()}</span>
       </div>
 
@@ -92,6 +96,13 @@ const CustomerOrderCard = ({ order, handleDelete }) => {
 
       {/* Actions */}
       <div className='flex justify-end gap-2 pt-2'>
+        <button
+          onClick={() => navigate('/dashboard/track-order', { state: { searchId: displayId } })}
+          className='bg-lime-100 dark:bg-lime-900/60 text-lime-800 dark:text-lime-200 px-3 py-2 rounded-md font-semibold text-sm hover:bg-lime-200 dark:hover:bg-lime-800 transition flex items-center gap-1 cursor-pointer'
+        >
+          <FaTruck className='h-4 w-4' />
+          Track
+        </button>
         <button
           onClick={handleViewPayment}
           className='bg-blue-100 dark:bg-blue-200 text-blue-700 dark:text-blue-900 px-3 py-2 rounded-md font-semibold text-sm hover:bg-blue-200 dark:hover:bg-blue-300 transition flex items-center gap-1'

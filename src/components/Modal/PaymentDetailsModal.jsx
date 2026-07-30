@@ -53,24 +53,26 @@ const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
                   <div className='mt-4 space-y-3'>
                     <div className='border-b dark:border-gray-700 pb-2'>
                       <p className='text-sm text-gray-500 dark:text-gray-400'>Transaction ID</p>
-                      <div className='flex items-center justify-between gap-2 mt-1'>
-                        <p className='text-sm font-medium text-gray-900 dark:text-white break-all'>
-                          {payment.paymentIntentId 
-                            ? `${payment.paymentIntentId.slice(0, 10)}...${payment.paymentIntentId.slice(-6)}` 
-                            : 'N/A'}
-                        </p>
-                        {payment.paymentIntentId && (
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(payment.paymentIntentId)
-                              toast.success('Copied to clipboard!')
-                            }}
-                            className='cursor-pointer text-xs bg-lime-100 hover:bg-lime-200 dark:bg-lime-900 dark:hover:bg-lime-800 text-lime-800 dark:text-lime-200 px-2 py-1 rounded transition'
-                          >
-                            Copy
-                          </button>
-                        )}
-                      </div>
+                      {(() => {
+                        const displayTxId = payment.paymentIntentId || payment.orderId || 'PN-TX-N/A'
+
+                        return (
+                          <div className='flex items-center justify-between gap-2 mt-1'>
+                            <p className='text-base font-bold text-lime-600 dark:text-lime-400 font-mono tracking-wide'>
+                              {displayTxId}
+                            </p>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(displayTxId)
+                                toast.success(`Copied Transaction ID to clipboard!`)
+                              }}
+                              className='cursor-pointer text-xs font-bold bg-lime-100 hover:bg-lime-200 dark:bg-lime-900 dark:hover:bg-lime-800 text-lime-800 dark:text-lime-200 px-2.5 py-1 rounded-lg transition'
+                            >
+                              Copy
+                            </button>
+                          </div>
+                        )
+                      })()}
                     </div>
 
                     <div className='border-b dark:border-gray-700 pb-2'>
@@ -89,7 +91,11 @@ const PaymentDetailsModal = ({ isOpen, closeModal, payment, loading }) => {
 
                     <div className='border-b dark:border-gray-700 pb-2'>
                       <p className='text-sm text-gray-500 dark:text-gray-400'>Payment Status</p>
-                      <p className='text-sm font-medium text-green-600 dark:text-green-400'>
+                      <p className={`text-sm font-bold ${
+                        payment.paymentStatus?.toLowerCase() === 'paid' 
+                          ? 'text-green-600 dark:text-green-400' 
+                          : 'text-amber-600 dark:text-amber-400'
+                      }`}>
                         {payment.paymentStatus}
                       </p>
                     </div>

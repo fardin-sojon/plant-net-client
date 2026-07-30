@@ -121,6 +121,7 @@ const SellerOrderDataRow = ({order, handleDelete, handleStatusChange}) => {
           >
             <option value='Pending'>Pending</option>
             <option value='In Progress'>In Progress</option>
+            <option value='Shipped'>Shipped</option>
             <option value='Delivered'>Delivered</option>
           </select>
           {/* Payment Icon */}

@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { MdPayment } from 'react-icons/md'
+import { FaTruck } from 'react-icons/fa'
 import DeleteModal from '../../Modal/DeleteModal'
 import PaymentDetailsModal from '../../Modal/PaymentDetailsModal'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
@@ -9,13 +11,15 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
   let [payment, setPayment] = useState(null)
   let [loadingPayment, setLoadingPayment] = useState(false)
   const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate()
   const closeModal = () => setIsOpen(false)
   const closePaymentModal = () => {
     setIsPaymentModalOpen(false)
     setPayment(null)
   }
 
-  const { transactionId, items } = order || {}
+  const { orderId, transactionId, items } = order || {}
+  const displayId = orderId || items?.[0]?.orderId || transactionId || 'PN-ORD-N/A'
   const firstItem = items?.[0] || {}
   const canCancel = items?.every(item => item.status !== 'Delivered' && item.status !== 'In Progress')
 
@@ -36,6 +40,21 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
 
   return (
     <tr>
+      {/* Order ID column */}
+      <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-mono font-semibold'>
+        <div className='flex items-center gap-2'>
+          <span className='text-lime-600 dark:text-lime-400 font-bold text-xs sm:text-sm'>{displayId}</span>
+          <button
+            type='button'
+            onClick={() => navigate('/dashboard/track-order', { state: { searchId: displayId } })}
+            className='p-1.5 text-lime-600 dark:text-lime-400 hover:bg-lime-50 dark:hover:bg-lime-950/60 rounded-lg transition cursor-pointer'
+            title={`Track Order ${displayId}`}
+          >
+            <FaTruck className='text-sm' />
+          </button>
+        </div>
+      </td>
+
       {/* Image column */}
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
         <div className='flex flex-col gap-2'>
@@ -106,17 +125,23 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
               )
             }
             let step = 0
-            if (status === 'In Progress' || status === 'Shipped') step = 1
-            if (status === 'Delivered') step = 2
+            if (status === 'In Progress') step = 1
+            if (status === 'Shipped') step = 2
+            if (status === 'Delivered') step = 3
+
+            let widthPercent = '0%'
+            if (step === 1) widthPercent = '33.3%'
+            if (step === 2) widthPercent = '66.6%'
+            if (step === 3) widthPercent = '100%'
 
             return (
               <div key={idx} className="h-10 flex items-center">
-                <div className="flex flex-col gap-0.5 w-32">
+                <div className="flex flex-col gap-0.5 w-36">
                   <div className="flex items-center justify-between relative w-full px-2">
                     <div className="absolute top-1/2 left-2 right-2 h-0.5 bg-gray-200 dark:bg-gray-700 -translate-y-1/2 z-0">
                       <div 
                         className="h-full bg-lime-500 transition-all duration-500" 
-                        style={{ width: `${step === 0 ? '0%' : step === 1 ? '50%' : '100%'}` }}
+                        style={{ width: widthPercent }}
                       />
                     </div>
 
@@ -124,19 +149,25 @@ const CustomerOrderDataRow = ({ order, handleDelete }) => {
                       className={`w-2.5 h-2.5 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
                         step >= 0 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-gray-200 dark:bg-gray-700'
                       }`}
-                      title="Ordered"
+                      title="Pending (Order Placed)"
                     />
                     <div 
                       className={`w-2.5 h-2.5 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
                         step >= 1 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600'
                       }`}
-                      title="In Progress"
+                      title="In Progress (Processing)"
                     />
                     <div 
                       className={`w-2.5 h-2.5 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
                         step >= 2 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600'
                       }`}
-                      title="Delivered"
+                      title="Shipped (On the way)"
+                    />
+                    <div 
+                      className={`w-2.5 h-2.5 rounded-full z-10 flex items-center justify-center transition-all duration-300 ${
+                        step >= 3 ? 'bg-lime-500 border border-lime-500 shadow-sm' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600'
+                      }`}
+                      title="Delivered (Completed)"
                     />
                   </div>
                   <div className="text-[9px] font-bold text-lime-600 dark:text-lime-400 uppercase text-center mt-0.5">

@@ -52,32 +52,40 @@ const UserDataRow = ({ user, refetch }) => {
         </span>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm'>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-full ${
-            user?.status === 'Verified' 
-              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
-              : user?.status === 'Requested'
-                ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 animate-pulse'
-                : 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-          }`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${
+        <div className="flex flex-col gap-1 items-start">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-full ${
               user?.status === 'Verified' 
-                ? 'bg-emerald-500' 
+                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
                 : user?.status === 'Requested'
-                  ? 'bg-amber-500'
-                  : 'bg-rose-500'
-            }`} />
-            {user?.status || 'Unavailable'}
-          </span>
-          
-          {(user?.status !== 'Verified' && (user?.status === 'Requested' || user?.role === 'admin' || user?.role === 'seller')) && (
-            <button
-              onClick={handleApprove}
-              className='px-2.5 py-1 text-2xs font-extrabold text-white bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition shadow-xs whitespace-nowrap'
-              style={{ fontSize: '10px' }}
-            >
-              Approve
-            </button>
+                  ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 animate-pulse'
+                  : 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${
+                user?.status === 'Verified' 
+                  ? 'bg-emerald-500' 
+                  : user?.status === 'Requested'
+                    ? 'bg-amber-500'
+                    : 'bg-rose-500'
+              }`} />
+              {user?.status || 'Unavailable'}
+            </span>
+            
+            {(user?.status !== 'Verified' && (user?.status === 'Requested' || user?.role === 'admin' || user?.role === 'seller')) && (
+              <button
+                onClick={handleApprove}
+                className='px-2.5 py-1 text-2xs font-extrabold text-white bg-lime-500 hover:bg-lime-600 rounded-lg cursor-pointer transition shadow-xs whitespace-nowrap'
+                style={{ fontSize: '10px' }}
+              >
+                Approve
+              </button>
+            )}
+          </div>
+
+          {user?.status === 'Requested' && (
+            <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-900/40">
+              💰 Paid $29 USD | Txn: {user?.transactionId || 'TXN-SEL-ONLINE'}
+            </div>
           )}
         </div>
       </td>

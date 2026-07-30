@@ -48,6 +48,9 @@ const Navbar = () => {
               <NavLink to='/shop' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
                 Shop
               </NavLink>
+              <NavLink to='/track-order' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                Track Order
+              </NavLink>
               <NavLink to='/about' className={({ isActive }) => `font-semibold text-sm transition hover:text-lime-500 ${isActive ? 'text-lime-500' : 'text-gray-700 dark:text-gray-300'}`}>
                 About Us
               </NavLink>

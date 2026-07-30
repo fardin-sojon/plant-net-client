@@ -34,6 +34,14 @@ import SellerAnalytics from '../pages/Dashboard/Seller/SellerAnalytics'
 import PlantCare from '../pages/Dashboard/Customer/PlantCare'
 import Settings from '../pages/Dashboard/Common/Settings'
 
+// New Dashboard Pages
+import Categories from '../pages/Dashboard/Admin/Categories'
+import Brands from '../pages/Dashboard/Admin/Brands'
+import Reports from '../pages/Dashboard/Admin/Reports'
+import MediaLibrary from '../pages/Dashboard/Admin/MediaLibrary'
+import ActivityLogs from '../pages/Dashboard/Admin/ActivityLogs'
+import TrackOrder from '../pages/TrackOrder/TrackOrder'
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -50,7 +58,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/payment-success',
-        element: <PaymentSuccess/>,
+        element: <PaymentSuccess />,
+      },
+      {
+        path: '/track-order',
+        element: <TrackOrder />,
       },
       {
         path: '/cart',
@@ -115,6 +127,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'statistics',
+        element: (
+          <PrivateRoute>
+            <Statistics />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: 'add-plant',
         element: (
           <PrivateRoute>
@@ -131,6 +151,38 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'inventory',
+        element: (
+          <PrivateRoute>
+            <MyInventory />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'products',
+        element: (
+          <PrivateRoute>
+            <MyInventory />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'categories',
+        element: (
+          <PrivateRoute>
+            <Categories />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'brands',
+        element: (
+          <PrivateRoute>
+            <Brands />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: 'manage-users',
         element: (
           <AdminRoute>
@@ -139,7 +191,31 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'users',
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'customers',
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
+      },
+      {
         path: 'manage-messages',
+        element: (
+          <AdminRoute>
+            <ManageMessages />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'messages',
         element: (
           <AdminRoute>
             <ManageMessages />
@@ -179,6 +255,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'orders',
+        element: (
+          <PrivateRoute>
+            <ManageOrders />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: 'wishlist',
         element: (
           <PrivateRoute>
@@ -195,7 +279,23 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'coupons',
+        element: (
+          <AdminRoute>
+            <ManageCoupons />
+          </AdminRoute>
+        ),
+      },
+      {
         path: 'manage-reviews',
+        element: (
+          <AdminRoute>
+            <ManageReviews />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'reviews',
         element: (
           <AdminRoute>
             <ManageReviews />
@@ -211,10 +311,50 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'analytics',
+        element: (
+          <PrivateRoute>
+            <SellerAnalytics />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <AdminRoute>
+            <Reports />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'media-library',
+        element: (
+          <PrivateRoute>
+            <MediaLibrary />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'activity-logs',
+        element: (
+          <AdminRoute>
+            <ActivityLogs />
+          </AdminRoute>
+        ),
+      },
+      {
         path: 'plant-care',
         element: (
           <PrivateRoute>
             <PlantCare />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'track-order',
+        element: (
+          <PrivateRoute>
+            <TrackOrder />
           </PrivateRoute>
         ),
       },

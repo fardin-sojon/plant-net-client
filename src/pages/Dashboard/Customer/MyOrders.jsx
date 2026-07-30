@@ -24,14 +24,15 @@ const MyOrders = () => {
     },
   });
 
-  // Group orders by transactionId
+  // Group orders by orderId or transactionId
   const groupedOrders = [];
   const groups = {};
   orders.forEach(order => {
-    const txId = order.transactionId || 'no-transaction';
-    if (!groups[txId]) {
-      groups[txId] = {
-        transactionId: txId,
+    const key = order.orderId || order.transactionId || 'no-transaction';
+    if (!groups[key]) {
+      groups[key] = {
+        orderId: order.orderId || order.transactionId,
+        transactionId: order.transactionId,
         createdAt: order.createdAt,
         customerName: order.customerName,
         customer: order.customer,
@@ -39,9 +40,9 @@ const MyOrders = () => {
         phone: order.phone,
         items: []
       };
-      groupedOrders.push(groups[txId]);
+      groupedOrders.push(groups[key]);
     }
-    groups[txId].items.push(order);
+    groups[key].items.push(order);
   });
   
   const handleDelete = async (id) => {
@@ -50,7 +51,6 @@ const MyOrders = () => {
       refetch();
       toast.success("Order canceled successfully");
     } catch (err) {
-      // console.log(err);
       toast.error(err.response.data.message || "Failed to cancel order");
     }
   };
@@ -66,6 +66,12 @@ const MyOrders = () => {
               <table className='min-w-full leading-normal hidden md:table'>
                 <thead>
                   <tr>
+                    <th
+                      scope='col'
+                      className='px-5 py-3 bg-white dark:bg-gray-800  border-b border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white  text-left text-sm uppercase font-normal'
+                    >
+                      Order ID
+                    </th>
                     <th
                       scope='col'
                       className='px-5 py-3 bg-white dark:bg-gray-800  border-b border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white  text-left text-sm uppercase font-normal'
